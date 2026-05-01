@@ -12,8 +12,10 @@ int main(void) {
     char buffer[BUFFER_SZ] = "";
     char code[CODE_SZ] = "";
     char city_name[CITY_NAME_SZ] = "";
-    float area = .0f;
-    float pib = .0f;
+    float area = .0;
+    float pib = .0;
+    float pib_per_capita = .0;
+    float population_density = .0;
     int population = 0;
     int tourist_attractions = 0;
 
@@ -25,7 +27,7 @@ int main(void) {
         fgets(buffer, sizeof(buffer), stdin);
         state = buffer[0];
 
-        printf("CÓDIGO...............: ");
+        printf("CODIGO...............: ");
         fgets(code, sizeof(code), stdin);
         code[strcspn(code, "\n")] = '\0';
 
@@ -33,11 +35,11 @@ int main(void) {
         fgets(city_name, sizeof(city_name), stdin);
         city_name[strcspn(city_name, "\n")] = '\0';
 
-        printf("POPULAÇÃO............: ");
+        printf("POPULACAO............: ");
         fgets(buffer, sizeof(buffer), stdin);
         population = atoi(buffer);
 
-        printf("ÁREA.................: ");
+        printf("AREA.................: ");
         fgets(buffer, sizeof(buffer), stdin);
         area = atof(buffer);
 
@@ -45,21 +47,26 @@ int main(void) {
         fgets(buffer, sizeof(buffer), stdin);
         pib = atof(buffer);
 
-        printf("N0. PONTOS TURÍSTICOS: ");
+        printf("N0. PONTOS TURISTICOS: ");
         fgets(buffer, sizeof(buffer), stdin);
         tourist_attractions = atoi(buffer);
 
-        // display informations
+        population_density = (float)population / area;
+        pib_per_capita = (float)pib * 1e9f / population;
+
         printf("\nCIDADE #%d CADASTRADA COM SUCESSO\n", i);
         printf(LINE);
-        printf("ESTADO...............: %c \n", state);
-        printf("CÓDIGO...............: %s \n", code);
-        printf("NOME.................: %s \n", city_name);
-        printf("POPULAÇÃO............: %d HABITANTES\n", population);
-        printf("ÁREA.................: %.2fKM²\n", area);
-        printf("PIB..................: R$%.2fBI\n", pib);
-        printf("N0. PONTOS TURÍSTICOS: %d \n", tourist_attractions);
+        printf("ESTADO................: %c \n", state);
+        printf("CODIGO................: %s \n", code);
+        printf("NOME..................: %s \n", city_name);
+        printf("POPULACAO.............: %d hab\n", population);
+        printf("AREA..................: %.2fkm2\n", area);
+        printf("PIB...................: R$ %.2f Bi\n", pib);
+        printf("N0. PONTOS TURISTICOS.: %d \n", tourist_attractions);
+        printf("DENSIDADE POPULACIONAL: %.2f hab/km2\n", population_density);
+        printf("PIB PER CAPITA........: R$ %.2f", pib_per_capita);
 
+        printf("PRESSIONE ENTER PARA CONTINUAR...");
         getchar();
     }
 
