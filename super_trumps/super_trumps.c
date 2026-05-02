@@ -7,6 +7,12 @@
 #define CODE_SZ 6
 #define CARDS_SZ 2
 
+#ifdef _WIN32
+#define CMD_CLS "cls"
+#else
+#define CMD_CLS "clear"
+#endif
+
 typedef struct {
     double gpd;
     double gpd_pc;  // pib per capita
@@ -19,13 +25,7 @@ typedef struct {
     char state;
 } Card;
 
-void clean(void) {
-#ifdef _WIN32
-    system("cls");
-#else
-    system("clear");
-#endif
-}
+void clean(void) { system(CMD_CLS); }
 
 void line(void) { printf("\n---\n\n"); }
 
