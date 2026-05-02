@@ -14,8 +14,9 @@
 #endif
 
 typedef struct {
-    double gpd;
-    double gpd_pc;  // pib per capita
+    double gdp;
+    double gdp_pc;  // gdp per capita
+    double super_power;
     float area;
     float ppt_dsty;  // population density
     unsigned int population;
@@ -28,6 +29,11 @@ typedef struct {
 void clean(void) { system(CMD_CLS); }
 
 void line(void) { printf("\n---\n\n"); }
+
+void pause(void) {
+    printf("\nPressione qualquer tecla para continuar... ");
+    getchar();
+}
 
 int main(void) {
     Card cds[CARDS_SZ];
@@ -52,26 +58,34 @@ int main(void) {
 
         printf("Populacao: ");
         fgets(buffer, sizeof(buffer), stdin);
-        cds[i].population = (unsigned int)strtoul(buffer, NULL, 10);
+        unsigned int population = (unsigned int)strtoul(buffer, NULL, 10);
+        cds[i].population = population;
 
         printf("Area (km2): ");
         fgets(buffer, sizeof(buffer), stdin);
-        cds[i].area = atof(buffer);
+        float area = atof(buffer);
+        cds[i].area = area;
 
         printf("PIB (bilhoes): R$ ");
         fgets(buffer, sizeof(buffer), stdin);
-        cds[i].gpd = atof(buffer);
+        float gdp = atof(buffer);
+        cds[i].gdp = gdp;
 
         printf("No. de pontos turisticos: ");
         fgets(buffer, sizeof(buffer), stdin);
         cds[i].tourist_attractions = (unsigned int)strtoul(buffer, NULL, 10);
 
-        cds[i].ppt_dsty = (float)cds[i].population / cds[i].area;
-        cds[i].gpd_pc = cds[i].gpd * 1e9 / (double)cds[i].population;
+        float ppt_dsty = (area > .0f) ? (float)population / area : population;
+        float ppt_dsty_inverse = (ppt_dsty > .0f) ? 1.0f / ppt_dsty : .0f;
+        double gdp_pc = (population > 0) ? gdp * 1e9 / population : gdp;
 
-        printf("\nCidade cadastrada com sucesso \n");
-        printf("Pressione qualquer tecla para continuar...");
-        getchar();
+        cds[i].ppt_dsty = ppt_dsty;
+        cds[i].gdp_pc = gdp_pc;
+        cds[i].super_power = (cds[i].gdp + cds[i].gdp_pc + cds[i].area + ppt_dsty_inverse +
+                              (double)cds[i].population + (double)cds[i].tourist_attractions);
+
+        printf("\nCidade cadastrada com sucesso");
+        pause();
     }
 
     // display cards
@@ -86,10 +100,11 @@ int main(void) {
         printf("Nome da cidade: %s \n", cds[i].city_name);
         printf("Populacao: %u hab. \n", cds[i].population);
         printf("Area: %.2fkm2 \n", cds[i].area);
-        printf("PIB: R$ %.2fbi \n", cds[i].gpd);
+        printf("PIB: R$ %.2fbi \n", cds[i].gdp);
         printf("Pontos turisticos: %u \n", cds[i].tourist_attractions);
         printf("Densidade populacional: %.2f hab/km2 \n", cds[i].ppt_dsty);
-        printf("PIB per capita: R$ %.2f \n", cds[i].gpd_pc);
+        printf("PIB per capita: R$ %.2f \n", cds[i].gdp_pc);
+        printf("SUPER POWER: %.2f \n", cds[i].super_power);
     }
 
     return 0;
