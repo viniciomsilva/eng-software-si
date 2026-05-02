@@ -2,72 +2,94 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define BUFFER_SZ 101
-#define CITY_NAME_SZ 51
-#define CODE_SZ 5
-#define LINE "--------------------------------------------------\n"
+#define BUFFER_SZ 104
+#define CITY_NAME_SZ 52
+#define CODE_SZ 6
+#define CARDS_SZ 2
+
+typedef struct {
+    double gpd;
+    double gpd_pc;  // pib per capita
+    float area;
+    float ppt_dsty;  // population density
+    unsigned int population;
+    unsigned int tourist_attractions;
+    char city_name[CITY_NAME_SZ];
+    char code[CODE_SZ];
+    char state;
+} Card;
+
+void clean(void) {
+#ifdef _WIN32
+    system("cls");
+#else
+    system("clear");
+#endif
+}
+
+void line(void) { printf("\n---\n\n"); }
 
 int main(void) {
-    char state = '\0';
-    char buffer[BUFFER_SZ] = "";
-    char code[CODE_SZ] = "";
-    char city_name[CITY_NAME_SZ] = "";
-    float area = .0;
-    float pib = .0;
-    float pib_per_capita = .0;
-    float population_density = .0;
-    int population = 0;
-    int tourist_attractions = 0;
+    Card cds[CARDS_SZ];
+    char buffer[BUFFER_SZ];
 
-    for (int i = 1; i <= 2; i++) {
-        printf("\nCADASTRO DA CIDADE #%d\n", i);
-        printf(LINE);
+    // input cards
+    for (int i = 0; i < CARDS_SZ; i++) {
+        clean();
+        printf("Cadastrar cidade #%d \n", i + 1);
 
-        printf("ESTADO...............: ");
+        printf("Estado (A-H): ");  // TODO: validate input
         fgets(buffer, sizeof(buffer), stdin);
-        state = buffer[0];
+        cds[i].state = buffer[0];
 
-        printf("CODIGO...............: ");
-        fgets(code, sizeof(code), stdin);
-        code[strcspn(code, "\n")] = '\0';
+        printf("Codigo (Ex.: A01): ");
+        fgets(cds[i].code, sizeof(cds[i].code), stdin);
+        cds[i].code[strcspn(cds[i].code, "\n")] = '\0';  // remove '\n'
 
-        printf("NOME.................: ");
-        fgets(city_name, sizeof(city_name), stdin);
-        city_name[strcspn(city_name, "\n")] = '\0';
+        printf("Nome da cidade: ");
+        fgets(cds[i].city_name, sizeof(cds[i].city_name), stdin);
+        cds[i].city_name[strcspn(cds[i].city_name, "\n")] = '\0';
 
-        printf("POPULACAO............: ");
+        printf("Populacao: ");
         fgets(buffer, sizeof(buffer), stdin);
-        population = atoi(buffer);
+        cds[i].population = (unsigned int)strtoul(buffer, NULL, 10);
 
-        printf("AREA.................: ");
+        printf("Area (km2): ");
         fgets(buffer, sizeof(buffer), stdin);
-        area = atof(buffer);
+        cds[i].area = atof(buffer);
 
-        printf("PIB..................: ");
+        printf("PIB (bilhoes): R$ ");
         fgets(buffer, sizeof(buffer), stdin);
-        pib = atof(buffer);
+        cds[i].gpd = atof(buffer);
 
-        printf("N0. PONTOS TURISTICOS: ");
+        printf("No. de pontos turisticos: ");
         fgets(buffer, sizeof(buffer), stdin);
-        tourist_attractions = atoi(buffer);
+        cds[i].tourist_attractions = (unsigned int)strtoul(buffer, NULL, 10);
 
-        population_density = (float)population / area;
-        pib_per_capita = (float)pib * 1e9f / population;
+        cds[i].ppt_dsty = (float)cds[i].population / cds[i].area;
+        cds[i].gpd_pc = cds[i].gpd * 1e9 / (double)cds[i].population;
 
-        printf("\nCIDADE #%d CADASTRADA COM SUCESSO\n", i);
-        printf(LINE);
-        printf("ESTADO................: %c \n", state);
-        printf("CODIGO................: %s \n", code);
-        printf("NOME..................: %s \n", city_name);
-        printf("POPULACAO.............: %d hab\n", population);
-        printf("AREA..................: %.2fkm2\n", area);
-        printf("PIB...................: R$ %.2f Bi\n", pib);
-        printf("N0. PONTOS TURISTICOS.: %d \n", tourist_attractions);
-        printf("DENSIDADE POPULACIONAL: %.2f hab/km2\n", population_density);
-        printf("PIB PER CAPITA........: R$ %.2f", pib_per_capita);
-
-        printf("PRESSIONE ENTER PARA CONTINUAR...");
+        printf("\nCidade cadastrada com sucesso \n");
+        printf("Pressione qualquer tecla para continuar...");
         getchar();
+    }
+
+    // display cards
+    clean();
+
+    for (int i = 0; i < CARDS_SZ; i++) {
+        if (i != 0) line();
+
+        printf("Carta #%d ", i + 1);
+        printf("| Est: %c ", cds[i].state);
+        printf("| Cod: %s \n", cds[i].code);
+        printf("Nome da cidade: %s \n", cds[i].city_name);
+        printf("Populacao: %u hab. \n", cds[i].population);
+        printf("Area: %.2fkm2 \n", cds[i].area);
+        printf("PIB: R$ %.2fbi \n", cds[i].gpd);
+        printf("Pontos turisticos: %u \n", cds[i].tourist_attractions);
+        printf("Densidade populacional: %.2f hab/km2 \n", cds[i].ppt_dsty);
+        printf("PIB per capita: R$ %.2f \n", cds[i].gpd_pc);
     }
 
     return 0;
