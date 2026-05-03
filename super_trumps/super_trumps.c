@@ -13,14 +13,14 @@
 #define CMD_CLS "clear"
 #endif
 
-typedef struct {
+typedef struct Card {
     double gdp;
     double gdp_pc;  // gdp per capita
     double super_power;
     float area;
     float ppt_dsty;  // population density
     unsigned int population;
-    unsigned int tourist_attractions;
+    unsigned int attractions;  // tourist attractions
     char city_name[CITY_NAME_SZ];
     char code[CODE_SZ];
     char state;
@@ -33,6 +33,23 @@ void line(void) { printf("\n---\n\n"); }
 void pause(void) {
     printf("\nPressione qualquer tecla para continuar... ");
     getchar();
+}
+
+void duel(const char* attr, char* name1, double val1, char* name2, double val2, short lower) {
+    short winner;
+
+    if (val1 == val2) {
+        printf("Em %s: houve empate! \n", attr);
+        return;
+    }
+
+    if (!lower)
+        winner = (val1 > val2) ? 0 : 1;
+    else
+        winner = (val1 < val2) ? 0 : 1;
+
+    printf("Ganhadora em %s, %s ", attr, (!winner) ? name1 : name2);  // !0 == gamer #1 wins
+    printf("com %.2f. \n", (!winner) ? val1 : val2);
 }
 
 int main(void) {
@@ -73,7 +90,7 @@ int main(void) {
 
         printf("No. de pontos turisticos: ");
         fgets(buffer, sizeof(buffer), stdin);
-        cds[i].tourist_attractions = (unsigned int)strtoul(buffer, NULL, 10);
+        cds[i].attractions = (unsigned int)strtoul(buffer, NULL, 10);
 
         float ppt_dsty = (area > .0f) ? (float)population / area : population;
         float ppt_dsty_inverse = (ppt_dsty > .0f) ? 1.0f / ppt_dsty : .0f;
@@ -81,8 +98,14 @@ int main(void) {
 
         cds[i].ppt_dsty = ppt_dsty;
         cds[i].gdp_pc = gdp_pc;
-        cds[i].super_power = (cds[i].gdp + cds[i].gdp_pc + cds[i].area + ppt_dsty_inverse +
-                              (double)cds[i].population + (double)cds[i].tourist_attractions);
+        cds[i].super_power = (   // super power =
+            cds[i].gdp +         // gdp +
+            cds[i].gdp_pc +      // dgp per capita +
+            cds[i].area +        // area +
+            ppt_dsty_inverse +   // population density inverse +
+            cds[i].population +  // population
+            cds[i].attractions   // tourist attractions
+        );
 
         printf("\nCidade cadastrada com sucesso");
         pause();
@@ -101,7 +124,7 @@ int main(void) {
         printf("Populacao: %u hab. \n", cds[i].population);
         printf("Area: %.2fkm2 \n", cds[i].area);
         printf("PIB: R$ %.2fbi \n", cds[i].gdp);
-        printf("Pontos turisticos: %u \n", cds[i].tourist_attractions);
+        printf("Pontos turisticos: %u \n", cds[i].attractions);
         printf("Densidade populacional: %.2f hab/km2 \n", cds[i].ppt_dsty);
         printf("PIB per capita: R$ %.2f \n", cds[i].gdp_pc);
         printf("SUPER POWER: %.2f \n", cds[i].super_power);
@@ -113,133 +136,22 @@ int main(void) {
     // card duel
     short i = 0;
     short j = 1;
-    short w = -1;
 
     clean();
-
-    // population comparison
-    if (cds[i].population > cds[j].population) {
-        w = i;
-    } else if (cds[j].population > cds[i].population) {
-        w = j;
-    } else {
-        w = -1;
-    }
-
-    if (w < 0) {
-        printf("Em populacao: houve empate! \n");
-    } else {
-        printf("Ganhadora em populacao: %s ", cds[w].city_name);
-        printf("com %u hab. \n", cds[w].population);
-    }
-
-    line();
-
-    // area comparison
-    if (cds[i].area > cds[j].area) {
-        w = i;
-    } else if (cds[j].area > cds[i].area) {
-        w = j;
-    } else {
-        w = -1;
-    }
-
-    if (w < 0) {
-        printf("Em area: houve empate! \n");
-    } else {
-        printf("Ganhadora em area: %s ", cds[w].city_name);
-        printf("com %.2fkm2. \n", cds[w].area);
-    }
-
-    line();
-
-    // population density comparison
-    if (cds[i].ppt_dsty < cds[j].ppt_dsty) {
-        w = i;
-    } else if (cds[j].ppt_dsty < cds[i].ppt_dsty) {
-        w = j;
-    } else {
-        w = -1;
-    }
-
-    if (w < 0) {
-        printf("Em densidade populacional: houve empate! \n");
-    } else {
-        printf("Ganhadora em densidade populacional: %s ", cds[w].city_name);
-        printf("com %.2f hab/km2. \n", cds[w].ppt_dsty);
-    }
-
-    line();
-
-    // gdp comparison
-    if (cds[i].gdp > cds[j].gdp) {
-        w = i;
-    } else if (cds[j].gdp > cds[i].gdp) {
-        w = j;
-    } else {
-        w = -1;
-    }
-
-    if (w < 0) {
-        printf("Em PIB: houve empate! \n");
-    } else {
-        printf("Ganhadora em PIB: %s ", cds[w].city_name);
-        printf("com R$ %.2fbi. \n", cds[w].gdp);
-    }
-
-    line();
-
-    // gdp per capital comparison
-    if (cds[i].gdp_pc > cds[j].gdp_pc) {
-        w = i;
-    } else if (cds[j].gdp_pc > cds[i].gdp_pc) {
-        w = j;
-    } else {
-        w = -1;
-    }
-
-    if (w < 0) {
-        printf("Em PIB per capita: houve empate! \n");
-    } else {
-        printf("Ganhadora em PIB per capita: %s ", cds[w].city_name);
-        printf("com R$ %.2f /hab. \n", cds[w].gdp_pc);
-    }
-
-    line();
-
-    // gdp per capital comparison
-    if (cds[i].tourist_attractions > cds[j].tourist_attractions) {
-        w = i;
-    } else if (cds[j].tourist_attractions > cds[i].tourist_attractions) {
-        w = j;
-    } else {
-        w = -1;
-    }
-
-    if (w < 0) {
-        printf("Em pontos turisticos: houve empate! \n");
-    } else {
-        printf("Ganhadora em pontos turisticos: %s ", cds[w].city_name);
-        printf("com %u atracoes. \n", cds[w].tourist_attractions);
-    }
-
-    line();
-
-    // super power comparison
-    if (cds[i].super_power > cds[j].super_power) {
-        w = i;
-    } else if (cds[j].super_power > cds[i].super_power) {
-        w = j;
-    } else {
-        w = -1;
-    }
-
-    if (w < 0) {
-        printf("Resultado final: empate de SUPER POWERS! \n");
-    } else {
-        printf("Ganhadora: %s ", cds[w].city_name);
-        printf("com %.2f de SUPER POWER!!! \n", cds[w].super_power);
-    }
+    // population duel
+    duel("Populacao", cds[i].city_name, cds[i].population, cds[j].city_name, cds[j].population, 0);
+    // area duel
+    duel("Area", cds[i].city_name, cds[i].area, cds[j].city_name, cds[j].area, 0);
+    // population density duel
+    duel("Densidade Populacional", cds[i].city_name, cds[i].ppt_dsty, cds[j].city_name, cds[j].ppt_dsty, 1);
+    // gdp duel
+    duel("PIB", cds[i].city_name, cds[i].gdp, cds[j].city_name, cds[j].gdp, 0);
+    // gpd per capita duel
+    duel("PIB Per Capita", cds[i].city_name, cds[i].gdp_pc, cds[j].city_name, cds[j].gdp_pc, 0);
+    // tourist attractions duel
+    duel("Pontos Turisticos", cds[i].city_name, cds[i].attractions, cds[j].city_name, cds[j].attractions, 0);
+    // super power duel
+    duel("SUPER POWER", cds[i].city_name, cds[i].super_power, cds[j].city_name, cds[j].super_power, 0);
 
     return 0;
 }
