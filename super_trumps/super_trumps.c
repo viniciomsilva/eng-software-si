@@ -38,7 +38,7 @@ void duel(const char* attr, char* name1, double val1, char* name2, double val2, 
         return;
     }
 
-    short winner = ((lower && val1 > val2) || val1 < val2) ? 1 : 0;
+    short winner = (lower && val1 > val2) || val1 < val2;
 
     printf("| Vencedor: %-24s ", (!winner) ? name1 : name2);  // !0 == gamer #1 wins
     printf("| Valor: " FMT_DEC "\n", (!winner) ? val1 : val2);
