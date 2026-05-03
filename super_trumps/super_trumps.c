@@ -107,5 +107,139 @@ int main(void) {
         printf("SUPER POWER: %.2f \n", cds[i].super_power);
     }
 
+    printf("\nPronto para comecar o duelo?");
+    pause();
+
+    // card duel
+    short i = 0;
+    short j = 1;
+    short w = -1;
+
+    clean();
+
+    // population comparison
+    if (cds[i].population > cds[j].population) {
+        w = i;
+    } else if (cds[j].population > cds[i].population) {
+        w = j;
+    } else {
+        w = -1;
+    }
+
+    if (w < 0) {
+        printf("Em populacao: houve empate! \n");
+    } else {
+        printf("Ganhadora em populacao: %s ", cds[w].city_name);
+        printf("com %u hab. \n", cds[w].population);
+    }
+
+    line();
+
+    // area comparison
+    if (cds[i].area > cds[j].area) {
+        w = i;
+    } else if (cds[j].area > cds[i].area) {
+        w = j;
+    } else {
+        w = -1;
+    }
+
+    if (w < 0) {
+        printf("Em area: houve empate! \n");
+    } else {
+        printf("Ganhadora em area: %s ", cds[w].city_name);
+        printf("com %.2fkm2. \n", cds[w].area);
+    }
+
+    line();
+
+    // population density comparison
+    if (cds[i].ppt_dsty < cds[j].ppt_dsty) {
+        w = i;
+    } else if (cds[j].ppt_dsty < cds[i].ppt_dsty) {
+        w = j;
+    } else {
+        w = -1;
+    }
+
+    if (w < 0) {
+        printf("Em densidade populacional: houve empate! \n");
+    } else {
+        printf("Ganhadora em densidade populacional: %s ", cds[w].city_name);
+        printf("com %.2f hab/km2. \n", cds[w].ppt_dsty);
+    }
+
+    line();
+
+    // gdp comparison
+    if (cds[i].gdp > cds[j].gdp) {
+        w = i;
+    } else if (cds[j].gdp > cds[i].gdp) {
+        w = j;
+    } else {
+        w = -1;
+    }
+
+    if (w < 0) {
+        printf("Em PIB: houve empate! \n");
+    } else {
+        printf("Ganhadora em PIB: %s ", cds[w].city_name);
+        printf("com R$ %.2fbi. \n", cds[w].gdp);
+    }
+
+    line();
+
+    // gdp per capital comparison
+    if (cds[i].gdp_pc > cds[j].gdp_pc) {
+        w = i;
+    } else if (cds[j].gdp_pc > cds[i].gdp_pc) {
+        w = j;
+    } else {
+        w = -1;
+    }
+
+    if (w < 0) {
+        printf("Em PIB per capita: houve empate! \n");
+    } else {
+        printf("Ganhadora em PIB per capita: %s ", cds[w].city_name);
+        printf("com R$ %.2f /hab. \n", cds[w].gdp_pc);
+    }
+
+    line();
+
+    // gdp per capital comparison
+    if (cds[i].tourist_attractions > cds[j].tourist_attractions) {
+        w = i;
+    } else if (cds[j].tourist_attractions > cds[i].tourist_attractions) {
+        w = j;
+    } else {
+        w = -1;
+    }
+
+    if (w < 0) {
+        printf("Em pontos turisticos: houve empate! \n");
+    } else {
+        printf("Ganhadora em pontos turisticos: %s ", cds[w].city_name);
+        printf("com %u atracoes. \n", cds[w].tourist_attractions);
+    }
+
+    line();
+
+    // super power comparison
+    if (cds[i].super_power > cds[j].super_power) {
+        w = i;
+    } else if (cds[j].super_power > cds[i].super_power) {
+        w = j;
+    } else {
+        w = -1;
+    }
+
+    if (w < 0) {
+        printf("Resultado final: empate de SUPER POWERS! \n");
+    } else {
+        printf("Ganhadora: %s ", cds[w].city_name);
+        printf("com %.2f de SUPER POWER!!! \n", cds[w].super_power);
+    }
+
     return 0;
 }
