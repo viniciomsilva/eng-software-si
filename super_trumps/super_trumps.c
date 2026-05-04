@@ -28,7 +28,32 @@ typedef struct Card {
     char state;
 } Card;
 
+void line(void) { printf("\n---\n\n"); }
+
 void clean_terminal(void) { system(CMD_CLS); }
+
+void pause(void) {
+    printf("\nPressione qualquer tecla para continuar... ");
+    getchar();
+}
+
+void display_cards(Card* cds, int size) {
+    for (int i = 0; i < size; i++) {
+        if (i != 0) line();
+
+        printf("Carta #%d ", i + 1);
+        printf("| Est: %c ", cds[i].state);
+        printf("| Cod: %s ", cds[i].code);
+        printf("| SUPER POWER: " FMT_DEC " \n", cds[i].super_power);
+        printf("Nome da cidade: %s \n", cds[i].city_name);
+        printf("Populacao: %u hab. \n", cds[i].population);
+        printf("Area: " FMT_DEC " km2 \n", cds[i].area);
+        printf("PIB: R$ " FMT_DEC " bi \n", cds[i].gdp);
+        printf("Pontos turisticos: %u \n", cds[i].attractions);
+        printf("Densidade populacional: " FMT_DEC " hab/km2 \n", cds[i].ppt_dsty);
+        printf("PIB per capita: R$ " FMT_DEC " \n", cds[i].gdp_pc);
+    }
+}
 
 void duel(const char* attr, char* name1, double val1, char* name2, double val2, short lower) {
     printf(">>> Atributo: %-24s ", attr);
@@ -42,13 +67,6 @@ void duel(const char* attr, char* name1, double val1, char* name2, double val2, 
 
     printf("| Vencedor: %-24s ", (!winner) ? name1 : name2);  // !0 == gamer #1 wins
     printf("| Valor: " FMT_DEC "\n", (!winner) ? val1 : val2);
-}
-
-void line(void) { printf("\n---\n\n"); }
-
-void pause(void) {
-    printf("\nPressione qualquer tecla para continuar... ");
-    getchar();
 }
 
 int main(void) {
@@ -114,31 +132,16 @@ int main(void) {
 
     // display cards
     clean_terminal();
-
-    for (int i = 0; i < CARDS_SZ; i++) {
-        if (i != 0) line();
-
-        printf("Carta #%d ", i + 1);
-        printf("| Est: %c ", cds[i].state);
-        printf("| Cod: %s \n", cds[i].code);
-        printf("Nome da cidade: %s \n", cds[i].city_name);
-        printf("Populacao: %u hab. \n", cds[i].population);
-        printf("Area: " FMT_DEC " km2 \n", cds[i].area);
-        printf("PIB: R$ " FMT_DEC " bi \n", cds[i].gdp);
-        printf("Pontos turisticos: %u \n", cds[i].attractions);
-        printf("Densidade populacional: " FMT_DEC " hab/km2 \n", cds[i].ppt_dsty);
-        printf("PIB per capita: R$ " FMT_DEC " \n", cds[i].gdp_pc);
-        printf("SUPER POWER: " FMT_DEC " \n", cds[i].super_power);
-    }
-
-    printf("\nPronto para comecar o duelo?");
-    pause();
+    display_cards(cds, CARDS_SZ);
 
     // card duel
+    printf("\nPronto para comecar o duelo?");
+    pause();
+    clean_terminal();
+
     short i = 0;
     short j = 1;
 
-    clean_terminal();
     // population duel
     duel("Populacao", cds[i].city_name, (double)cds[i].population, cds[j].city_name, (double)cds[j].population, 0);
     // area duel
