@@ -37,44 +37,10 @@ void pause(void) {
     getchar();
 }
 
-void display_cards(Card* cds, int size) {
-    for (int i = 0; i < size; i++) {
-        if (i != 0) line();
-
-        printf("Carta #%d ", i + 1);
-        printf("| Est: %c ", cds[i].state);
-        printf("| Cod: %s ", cds[i].code);
-        printf("| SUPER POWER: " FMT_DEC " \n", cds[i].super_power);
-        printf("Nome da cidade: %s \n", cds[i].city_name);
-        printf("Populacao: %u hab. \n", cds[i].population);
-        printf("Area: " FMT_DEC " km2 \n", cds[i].area);
-        printf("PIB: R$ " FMT_DEC " bi \n", cds[i].gdp);
-        printf("Pontos turisticos: %u \n", cds[i].attractions);
-        printf("Densidade populacional: " FMT_DEC " hab/km2 \n", cds[i].ppt_dsty);
-        printf("PIB per capita: R$ " FMT_DEC " \n", cds[i].gdp_pc);
-    }
-}
-
-void duel(const char* attr, char* name1, double val1, char* name2, double val2, short lower) {
-    printf(">>> Atributo: %-24s ", attr);
-
-    if (val1 == val2) {
-        printf("| EMPATE | Valor " FMT_DEC "\n", val1);
-        return;
-    }
-
-    short winner = (lower && val1 > val2) || val1 < val2;
-
-    printf("| Vencedor: %-24s ", (!winner) ? name1 : name2);  // !0 == gamer #1 wins
-    printf("| Valor: " FMT_DEC "\n", (!winner) ? val1 : val2);
-}
-
-int main(void) {
-    Card cds[CARDS_SZ];
+void register_cards(Card* cds, int size) {
     char buffer[BUFFER_SZ];
 
-    // input cards
-    for (int i = 0; i < CARDS_SZ; i++) {
+    for (int i = 0; i < size; i++) {
         clean_terminal();
         printf("Cadastrar cidade #%d \n", i + 1);
 
@@ -129,6 +95,45 @@ int main(void) {
         printf("\nCidade cadastrada com sucesso");
         pause();
     }
+}
+
+void display_cards(Card* cds, int size) {
+    for (int i = 0; i < size; i++) {
+        if (i != 0) line();
+
+        printf("Carta #%d ", i + 1);
+        printf("| Est: %c ", cds[i].state);
+        printf("| Cod: %s ", cds[i].code);
+        printf("| SUPER POWER: " FMT_DEC " \n", cds[i].super_power);
+        printf("Nome da cidade: %s \n", cds[i].city_name);
+        printf("Populacao: %u hab. \n", cds[i].population);
+        printf("Area: " FMT_DEC " km2 \n", cds[i].area);
+        printf("PIB: R$ " FMT_DEC " bi \n", cds[i].gdp);
+        printf("Pontos turisticos: %u \n", cds[i].attractions);
+        printf("Densidade populacional: " FMT_DEC " hab/km2 \n", cds[i].ppt_dsty);
+        printf("PIB per capita: R$ " FMT_DEC " \n", cds[i].gdp_pc);
+    }
+}
+
+void duel(const char* attr, char* name1, double val1, char* name2, double val2, short lower) {
+    printf(">>> Atributo: %-24s ", attr);
+
+    if (val1 == val2) {
+        printf("| EMPATE | Valor " FMT_DEC "\n", val1);
+        return;
+    }
+
+    short winner = (lower && val1 > val2) || val1 < val2;
+
+    printf("| Vencedor: %-24s ", (!winner) ? name1 : name2);  // !0 == gamer #1 wins
+    printf("| Valor: " FMT_DEC "\n", (!winner) ? val1 : val2);
+}
+
+int main(void) {
+    Card cds[CARDS_SZ];
+
+    // register cards
+    register_cards(cds, CARDS_SZ);
 
     // display cards
     clean_terminal();
