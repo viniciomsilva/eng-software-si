@@ -98,6 +98,8 @@ void register_cards(Card* cds, int size) {
 }
 
 void display_cards(Card* cds, int size) {
+    clean_terminal();
+
     for (int i = 0; i < size; i++) {
         if (i != 0) line();
 
@@ -129,39 +131,84 @@ void duel(const char* attr, char* name1, double val1, char* name2, double val2, 
     printf("| Valor: " FMT_DEC "\n", (!winner) ? val1 : val2);
 }
 
+void main_menu(void) {
+    clean_terminal();
+    printf("===== SUPER TRUNFO ===== \n\n");
+    printf("[ 1 ] Cadastrar Cartas \n");
+    printf("[ 2 ] Exibir Cartas \n");
+    printf("[ 3 ] Duelar \n");
+    printf("[ 0 ] Sair \n\n");
+}
+
 int main(void) {
     Card cds[CARDS_SZ];
+    char buffer[BUFFER_SZ];
+    unsigned short opt = 0;
 
-    // register cards
-    register_cards(cds, CARDS_SZ);
+    main_menu();
 
-    // display cards
-    clean_terminal();
-    display_cards(cds, CARDS_SZ);
+    do {
+        printf("Escolha > ");
+        fgets(buffer, sizeof(buffer), stdin);
+        opt = (unsigned short)strtoul(buffer, NULL, 10);
 
-    // card duel
-    printf("\nPronto para comecar o duelo?");
-    pause();
-    clean_terminal();
+        switch (opt) {
+            case 1:
+                register_cards(cds, CARDS_SZ);
 
-    short i = 0;
-    short j = 1;
+            case 2:
+                display_cards(cds, CARDS_SZ);
+                pause();
+                main_menu();
+                break;
 
-    // population duel
-    duel("Populacao", cds[i].city_name, (double)cds[i].population, cds[j].city_name, (double)cds[j].population, 0);
-    // area duel
-    duel("Area", cds[i].city_name, cds[i].area, cds[j].city_name, cds[j].area, 0);
-    // population density duel
-    duel("Densidade Populacional", cds[i].city_name, cds[i].ppt_dsty, cds[j].city_name, cds[j].ppt_dsty, 1);
-    // gdp duel
-    duel("PIB", cds[i].city_name, cds[i].gdp, cds[j].city_name, cds[j].gdp, 0);
-    // gpd per capita duel
-    duel("PIB Per Capita", cds[i].city_name, cds[i].gdp_pc, cds[j].city_name, cds[j].gdp_pc, 0);
-    // tourist attractions duel
-    duel("Pontos Turisticos", cds[i].city_name, (double)cds[i].attractions, cds[j].city_name,
-         (double)cds[j].attractions, 0);
-    // super power duel
-    duel("SUPER POWER", cds[i].city_name, cds[i].super_power, cds[j].city_name, cds[j].super_power, 0);
+            case 3:
+                clean_terminal();
+
+                short i = 0;
+                short j = 1;
+
+                // population duel
+                duel("Populacao", cds[i].city_name, (double)cds[i].population, cds[j].city_name,
+                     (double)cds[j].population, 0);
+
+                // area duel
+                duel("Area", cds[i].city_name, cds[i].area, cds[j].city_name, cds[j].area, 0);
+
+                // population density duel
+                duel("Densidade Populacional", cds[i].city_name, cds[i].ppt_dsty, cds[j].city_name,
+                     cds[j].ppt_dsty, 1);
+
+                // gdp duel
+                duel("PIB", cds[i].city_name, cds[i].gdp, cds[j].city_name, cds[j].gdp, 0);
+
+                // gpd per capita duel
+                duel("PIB Per Capita", cds[i].city_name, cds[i].gdp_pc, cds[j].city_name,
+                     cds[j].gdp_pc, 0);
+
+                // tourist attractions duel
+                duel("Pontos Turisticos", cds[i].city_name, (double)cds[i].attractions,
+                     cds[j].city_name, (double)cds[j].attractions, 0);
+
+                // super power duel
+                duel("SUPER POWER", cds[i].city_name, cds[i].super_power, cds[j].city_name,
+                     cds[j].super_power, 0);
+
+                pause();
+                main_menu();
+                break;
+
+            case 0:
+                printf("Saindo...");
+                break;
+
+            default:
+                main_menu();
+                printf("Opcao invalida! ");
+                break;
+        }
+
+    } while (opt != 0);
 
     return 0;
 }
