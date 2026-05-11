@@ -1,7 +1,14 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 #define PIECES_LEN 16
 #define CB_LEN 8
+
+#ifdef _WIN32
+#define CLS_CMD "cls"
+#else
+#define CLS_CMD "clear"
+#endif
 
 const char COLUMNS[CB_LEN] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
 
@@ -10,6 +17,8 @@ typedef struct Piece {
     short y;
     char label[4];
 } Piece;
+
+void clear(void) { system(CLS_CMD); }
 
 void start(char* cb[CB_LEN][CB_LEN], Piece* pcs) {
     for (short i = 0; i < PIECES_LEN; i++) cb[pcs[i].y][pcs[i].x] = pcs[i].label;
@@ -52,6 +61,7 @@ int main(void) {
         {.label = "RK2", .x = 7, .y = 7},
     };
 
+    clear();
     start(cb, pieces);
     chessboard(cb);
 
