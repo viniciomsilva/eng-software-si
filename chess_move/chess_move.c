@@ -11,8 +11,6 @@
 #define CLS_CMD "clear"
 #endif
 
-const char COLUMNS[CB_LEN] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
-
 typedef struct Piece {
     short x;
     short y;
@@ -37,20 +35,28 @@ void display_cb(char* cb[CB_LEN][CB_LEN]) {
         }
         printf("\n");
     }
-
-    printf(" ");
-    for (short k = 0; k < CB_LEN; k++) {
-        printf("%6c", COLUMNS[k]);
-    }
-    printf("\n");
-    for (short l = 0; l <= 50; l++) {
-        printf("-");
-    }
-    printf("\n\n");
+    printf("      a     b     c     d     e     f     g     h  \n");
+    printf("---------------------------------------------------\n\n");
 }
+
+short move_pawn(char* cb[CB_LEN][CB_LEN], Piece* pawn) {
+    // Moves only one square forward along the Y-axis.
+    // It cannot move backward.
+    // It cannot jump over other pieces.
+    short ny = pawn->y - 1;
+
+    if (ny < 0) return 0;           // Verifica se está no limite do tabuleiro.
+    if (cb[ny][pawn->x]) return 0;  // Verifica se o destino está vazio.
+
+    cb[pawn->y][pawn->x] = NULL;
+    pawn->y = ny;
+
+    return 1;
+};
 
 int main(void) {
     short opt = 0;
+    short mov = 0;
     char buffer[BUFFER_SIZE];
     char* cb[CB_LEN][CB_LEN] = {NULL};
     Piece pieces[PIECES_LEN] = {
@@ -90,83 +96,30 @@ int main(void) {
         fgets(buffer, sizeof(buffer), stdin);
         opt = (short)strtol(buffer, NULL, 10);
 
-        switch (opt) {
-            case 1:  // TODO: Move PA1
-                printf("\nMOVENDO [ %s ] \n", pieces[opt - 1].label);
-                break;
-
-            case 2:  // TODO: Move PA2
-                printf("\nMOVENDO [ %s ] \n", pieces[opt - 1].label);
-                break;
-
-            case 3:  // TODO: Move PA3
-                printf("\nMOVENDO [ %s ] \n", pieces[opt - 1].label);
-                break;
-
-            case 4:  // TODO: Move PA4
-                printf("\nMOVENDO [ %s ] \n", pieces[opt - 1].label);
-                break;
-
-            case 5:  // TODO: Move PA5
-                printf("\nMOVENDO [ %s ] \n", pieces[opt - 1].label);
-                break;
-
-            case 6:  // TODO: Move PA6
-                printf("\nMOVENDO [ %s ] \n", pieces[opt - 1].label);
-                break;
-
-            case 7:  // TODO: Move PA7
-                printf("\nMOVENDO [ %s ] \n", pieces[opt - 1].label);
-                break;
-
-            case 8:  // TODO: Move PA8
-                printf("\nMOVENDO [ %s ] \n", pieces[opt - 1].label);
-                break;
-
-            case 9:  // TODO: Move RK1
-                printf("\nMOVENDO [ %s ] \n", pieces[opt - 1].label);
-                break;
-
-            case 10:  // TODO: Move KN1
-                printf("\nMOVENDO [ %s ] \n", pieces[opt - 1].label);
-                break;
-
-            case 11:  // TODO: Move BI1
-                printf("\nMOVENDO [ %s ] \n", pieces[opt - 1].label);
-                break;
-
-            case 12:  // TODO: Move QEN
-                printf("\nMOVENDO [ %s ] \n", pieces[opt - 1].label);
-                break;
-
-            case 13:  // TODO: Move KNG
-                printf("\nMOVENDO [ %s ] \n", pieces[opt - 1].label);
-                break;
-
-            case 14:  // TODO: Move BI2
-                printf("\nMOVENDO [ %s ] \n", pieces[opt - 1].label);
-                break;
-
-            case 15:  // TODO: Move KN2
-                printf("\nMOVENDO [ %s ] \n", pieces[opt - 1].label);
-                break;
-
-            case 16:  // TODO: Move RK2
-                printf("\nMOVENDO [ %s ] \n", pieces[opt - 1].label);
-                break;
-
-            case 99:
-                printf("\nSAINDO...");
-                opt = 99;
-                break;
-
-            default:
-                printf("INVALIDA! PRESSIONE QUALQUER TECLA...");
-                getchar();
-                break;
+        if (opt >= 1 && opt <= 8) {  // Move Pawns
+            mov = move_pawn(cb, &pieces[opt - 1]);
+        } else if (opt == 9 || opt == 16) {  // TODO: Move Rooks
+            /* code */
+        } else if (opt == 10 || opt == 15) {  // TODO: Move Rights
+            /* code */
+        } else if (opt == 11 || opt == 14) {  // TODO: Move Bishops
+            /* code */
+        } else if (opt == 12) {  // TODO: Move Queen
+            /* code */
+        } else if (opt == 13) {  // TODO: Move King
+            /* code */
+        } else if (opt == 99) {
+            printf("\nSAINDO...");
+        } else {
+            mov = 1;
+            printf("OPCAO INVALIDA! PRESSIONE QUALQUER TECLA PARA CONTINUAR.");
+            getchar();
         }
 
-        getchar();  // TODO: Remove getchar() from here.
+        if (!mov) {
+            printf("MOVIMENTO INVALIDO! TENTE NOVAMENTE!");
+            getchar();
+        }
     } while (opt != 99);
 
     return 0;
