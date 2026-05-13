@@ -17,21 +17,53 @@ typedef struct Piece {
     char label[4];
 } Piece;
 
+typedef struct State {
+    char* chessboard[CB_LEN][CB_LEN];
+    Piece pieces[PIECES_LEN];
+} State;
+
 void clear(void) { system(CLS_CMD); }
 
-void update_cb(char* cb[CB_LEN][CB_LEN], Piece* pcs) {
+void init(State* stt) {
+    for (short y = 0; y < CB_LEN; y++) {
+        for (short x = 0; x < CB_LEN; x++) {
+            stt->chessboard[y][x] = NULL;
+        }
+    }
+
+    stt->pieces[0] = (Piece){.label = "PA1", .x = 0, .y = 6};
+    stt->pieces[1] = (Piece){.label = "PA2", .x = 1, .y = 6};
+    stt->pieces[2] = (Piece){.label = "PA3", .x = 2, .y = 6};
+    stt->pieces[3] = (Piece){.label = "PA4", .x = 3, .y = 6};
+    stt->pieces[4] = (Piece){.label = "PA5", .x = 4, .y = 6};
+    stt->pieces[5] = (Piece){.label = "PA6", .x = 5, .y = 6};
+    stt->pieces[6] = (Piece){.label = "PA7", .x = 6, .y = 6};
+    stt->pieces[7] = (Piece){.label = "PA8", .x = 7, .y = 6};
+    stt->pieces[8] = (Piece){.label = "RK1", .x = 0, .y = 7};
+    stt->pieces[9] = (Piece){.label = "KN1", .x = 1, .y = 7};
+    stt->pieces[10] = (Piece){.label = "BI1", .x = 2, .y = 7};
+    stt->pieces[11] = (Piece){.label = "QEN", .x = 3, .y = 7};
+    stt->pieces[12] = (Piece){.label = "KNG", .x = 4, .y = 7};
+    stt->pieces[13] = (Piece){.label = "BI2", .x = 5, .y = 7};
+    stt->pieces[14] = (Piece){.label = "KN2", .x = 6, .y = 7};
+    stt->pieces[15] = (Piece){.label = "RK2", .x = 7, .y = 7};
+}
+
+void update(State* stt) {
     for (short i = 0; i < PIECES_LEN; i++) {
-        cb[pcs[i].y][pcs[i].x] = pcs[i].label;
+        short y = stt->pieces[i].y;
+        short x = stt->pieces[i].x;
+        stt->chessboard[y][x] = stt->pieces[i].label;
     }
 }
 
-void display_cb(char* cb[CB_LEN][CB_LEN]) {
-    for (short i = 0; i < CB_LEN; i++) {  // lines
-        printf("%d - ", CB_LEN - i);
-
-        for (short j = 0; j < CB_LEN; j++) {  // columns
-            printf(" %s ", (cb[i][j]) ? cb[i][j] : "   ");
-            if (j < CB_LEN - 1) printf("|");
+void draw(State* stt) {
+    for (short y = 0; y < CB_LEN; y++) {
+        printf("%d - ", CB_LEN - y);
+        for (short x = 0; x < CB_LEN; x++) {
+            char* content = stt->chessboard[y][x];
+            printf(" %s ", (content) ? content : "   ");
+            if (x < CB_LEN - 1) printf("|");
         }
         printf("\n");
     }
@@ -39,65 +71,48 @@ void display_cb(char* cb[CB_LEN][CB_LEN]) {
     printf("---------------------------------------------------\n\n");
 }
 
-short move_pawn(char* cb[CB_LEN][CB_LEN], Piece* pawn) {
-    // Moves only one square forward along the Y-axis.
-    // It cannot move backward.
-    // It cannot jump over other pieces.
-    short ny = pawn->y - 1;
+short move_pawn(State* stt, short i) {
+    short y = stt->pieces[i].y;
+    short x = stt->pieces[i].x;
+    short ny = y - 1;
 
-    if (ny < 0) return 0;           // Verifica se está no limite do tabuleiro.
-    if (cb[ny][pawn->x]) return 0;  // Verifica se o destino está vazio.
+    if (ny >= 0 && !stt->chessboard[ny][x]) {
+        stt->chessboard[y][x] = NULL;
+        stt->pieces[i].y = ny;
+        return 1;
+    }
 
-    cb[pawn->y][pawn->x] = NULL;
-    pawn->y = ny;
-
-    return 1;
+    return 0;
 };
 
 int main(void) {
     short opt = 0;
     short mov = 0;
     char buffer[BUFFER_SIZE];
-    char* cb[CB_LEN][CB_LEN] = {NULL};
-    Piece pieces[PIECES_LEN] = {
-        {.label = "PA1", .x = 0, .y = 6},  // Pawn
-        {.label = "PA2", .x = 1, .y = 6},  // Pawn
-        {.label = "PA3", .x = 2, .y = 6},  // Pawn
-        {.label = "PA4", .x = 3, .y = 6},  // Pawn
-        {.label = "PA5", .x = 4, .y = 6},  // Pawn
-        {.label = "PA6", .x = 5, .y = 6},  // Pawn
-        {.label = "PA7", .x = 6, .y = 6},  // Pawn
-        {.label = "PA8", .x = 7, .y = 6},  // Pawn
-        {.label = "RK1", .x = 0, .y = 7},  // Rook
-        {.label = "KN1", .x = 1, .y = 7},  // Knight
-        {.label = "BI1", .x = 2, .y = 7},  // Bishop
-        {.label = "QEN", .x = 3, .y = 7},  // Queen
-        {.label = "KNG", .x = 4, .y = 7},  // King
-        {.label = "BI2", .x = 5, .y = 7},  // Bishop
-        {.label = "KN2", .x = 6, .y = 7},  // Knight
-        {.label = "RK2", .x = 7, .y = 7},  // Rook
-    };
+    State stt;
+
+    init(&stt);
 
     do {
-        update_cb(cb, pieces);
+        update(&stt);
 
         clear();
         printf("MOVIMENTACAO DO XADREZ \n\n");
-        display_cb(cb);
+        draw(&stt);
 
-        // main menu
+        // Main menu
         for (short i = 0; i < PIECES_LEN; i++) {
-            printf("[ %2d ] %s  ", i + 1, pieces[i].label);
+            printf("[ %2d ] %s  ", i + 1, stt.pieces[i].label);
             if (!((i + 1) % 4)) printf("\n");
         }
         printf("[ 99 ] SAIR ");
-
         printf("\n\n> ESCOLHA UMA OPCAO: ");
+
         fgets(buffer, sizeof(buffer), stdin);
         opt = (short)strtol(buffer, NULL, 10);
 
         if (opt >= 1 && opt <= 8) {  // Move Pawns
-            mov = move_pawn(cb, &pieces[opt - 1]);
+            mov = move_pawn(&stt, opt - 1);
         } else if (opt == 9 || opt == 16) {  // TODO: Move Rooks
             /* code */
         } else if (opt == 10 || opt == 15) {  // TODO: Move Rights
@@ -109,6 +124,7 @@ int main(void) {
         } else if (opt == 13) {  // TODO: Move King
             /* code */
         } else if (opt == 99) {
+            mov = 1;
             printf("\nSAINDO...");
         } else {
             mov = 1;
