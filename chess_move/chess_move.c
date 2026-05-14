@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define BUFFER_SIZE 24
 #define PIECES_LEN 16
@@ -117,8 +118,6 @@ short move_pawn(State* stt, short i) {
     if (is_inside(x, ny) && is_empty(stt, x, ny)) {
         set_square_empty(stt, x, y);
         update_piece(&stt->pieces[i], x, ny);
-        // stt->chessboard[y][x] = NULL;
-        // stt->pieces[i].y = ny;
         return 1;
     }
 
@@ -133,22 +132,27 @@ void init(State* stt) {
         }
     }
 
-    stt->pieces[0] = (Piece){.label = "PA1", .x = 0, .y = 6};
-    stt->pieces[1] = (Piece){.label = "PA2", .x = 1, .y = 6};
-    stt->pieces[2] = (Piece){.label = "PA3", .x = 2, .y = 6};
-    stt->pieces[3] = (Piece){.label = "PA4", .x = 3, .y = 6};
-    stt->pieces[4] = (Piece){.label = "PA5", .x = 4, .y = 6};
-    stt->pieces[5] = (Piece){.label = "PA6", .x = 5, .y = 6};
-    stt->pieces[6] = (Piece){.label = "PA7", .x = 6, .y = 6};
-    stt->pieces[7] = (Piece){.label = "PA8", .x = 7, .y = 6};
-    stt->pieces[8] = (Piece){.label = "RK1", .x = 0, .y = 7};
-    stt->pieces[9] = (Piece){.label = "KN1", .x = 1, .y = 7};
-    stt->pieces[10] = (Piece){.label = "BI1", .x = 2, .y = 7};
-    stt->pieces[11] = (Piece){.label = "QEN", .x = 3, .y = 7};
-    stt->pieces[12] = (Piece){.label = "KNG", .x = 4, .y = 7};
-    stt->pieces[13] = (Piece){.label = "BI2", .x = 5, .y = 7};
-    stt->pieces[14] = (Piece){.label = "KN2", .x = 6, .y = 7};
-    stt->pieces[15] = (Piece){.label = "RK2", .x = 7, .y = 7};
+    char* labels[PIECES_LEN] = {
+        "PA1", "PA2", "PA3", "PA4", "PA6", "PA6", "PA7", "PA8",  // first line
+        "RK1", "KN1", "BI1", "QEN", "KNG", "BI2", "KN2", "RK2",  // second line
+    };
+    short y = 6;
+    short x = 0;
+
+    for (short i = 0; i < PIECES_LEN; i++) {
+        strncpy(stt->pieces[i].label, labels[i], 3);
+        stt->pieces[i].label[3] = '\0';
+        stt->pieces[i].x = x;
+        stt->pieces[i].y = y;
+
+        if (x < CB_LEN - 1) {
+            x++;
+            continue;
+        }
+
+        y++;
+        x = 0;
+    }
 }
 
 void update_stt(State* stt) {
