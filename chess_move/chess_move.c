@@ -12,6 +12,17 @@
 #define CLS_CMD "clear"
 #endif
 
+enum CardinalIndex {
+    N,
+    S,
+    E,
+    W,
+    NE,
+    NW,
+    SE,
+    SW,
+} CardinalIndex;
+
 // Data Structs
 typedef struct Piece {
     short x;
@@ -24,13 +35,18 @@ typedef struct State {
     Piece pieces[PIECES_LEN];
 } State;
 
+typedef struct Direction {
+    short x;
+    short y;
+} Direction;
+
 // Verification functions
 short is_inside(short x, short y);
 short is_empty(State* stt, short x, short y);
 short is_path_clear(State* stt, short x, short y);  // TODO: Implementation
 
 // Validation functions;
-short move_pawn(State* stt, short i);
+short move_pawn(State* stt, Direction* drt, short i);
 short move_rook(State* stt, short i);    // TODO: Implementation
 short move_knight(State* stt, short i);  // TODO: Implementation
 short move_bishop(State* stt, short i);  // TODO: Implementation
@@ -53,6 +69,16 @@ int main(void) {
     short mov = 0;
     char buffer[BUFFER_SIZE];
     State stt;
+    Direction drts[8] = {
+        {.x = 0, .y = -1},   // North       0
+        {.x = 0, .y = 1},    // South       1
+        {.x = 1, .y = 0},    // East        2
+        {.x = -1, .y = 0},   // West        3
+        {.x = 1, .y = -1},   // Northeast   4
+        {.x = -1, .y = -1},  // Northwest   5
+        {.x = -1, .y = 1},   // Southeast   6
+        {.x = 1, .y = 1},    // Southwest   7
+    };
 
     init(&stt);
 
@@ -75,7 +101,7 @@ int main(void) {
         opt = (short)strtol(buffer, NULL, 10);
 
         if (opt >= 1 && opt <= 8) {  // Move Pawns
-            mov = move_pawn(&stt, opt - 1);
+            mov = move_pawn(&stt, &drts[N], opt - 1);
         } else if (opt == 9 || opt == 16) {  // TODO: Move Rooks
             /* code */
         } else if (opt == 10 || opt == 15) {  // TODO: Move Rights
@@ -110,10 +136,10 @@ short is_inside(short x, short y) { return x >= 0 && x < CB_LEN && y >= 0 && y <
 short is_empty(State* stt, short x, short y) { return stt->chessboard[y][x] == NULL; }
 
 // Implementation: Validation functions
-short move_pawn(State* stt, short i) {
+short move_pawn(State* stt, Direction* drt, short i) {
     short y = stt->pieces[i].y;
     short x = stt->pieces[i].x;
-    short ny = y - 1;
+    short ny = y + drt->y;
 
     if (is_inside(x, ny) && is_empty(stt, x, ny)) {
         set_square_empty(stt, x, y);
