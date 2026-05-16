@@ -103,6 +103,8 @@ int main(void) {
         fgets(buffer, sizeof(buffer), stdin);
         opt = (short)strtol(buffer, NULL, 10);
 
+        if (opt >= 0 && opt <= PIECES_LEN) printf("  %s ", stt.pieces[(opt - 1)].label);
+
         if (opt >= 1 && opt <= 8) {  // Move Pawns
             mov = move_piece(&stt, &drts[N], (opt - 1), 1);
         } else if (opt == 9 || opt == 16) {  // Move Rooks
@@ -123,8 +125,22 @@ int main(void) {
             mov = move_piece(&stt, &drts[di], (opt - 1), distance);
         } else if (opt == 10 || opt == 15) {  // TODO: Move Rights
             /* code */
-        } else if (opt == 11 || opt == 14) {  // TODO: Move Bishops
-            /* code */
+        } else if (opt == 11 || opt == 14) {  // Move Bishops
+            printf("\n[ %d ] NORDESTE  [ %d ] NOROESTE  [ %d ] SUDOESTE  [ %d ] SUDOESTE \n", NE, NW, SE, SW);
+
+            do {
+                printf("\n> ESCOLHA UMA DIRECAO: ");
+
+                fgets(buffer, sizeof(buffer), stdin);
+                di = (short)strtol(buffer, NULL, 10);
+            } while (di != NE && di != NW && di != SE && di != SW);
+
+            printf("> QUANTIDADE DE CASAS: ");
+
+            fgets(buffer, sizeof(buffer), stdin);
+            distance = (short)strtol(buffer, NULL, 10);
+
+            mov = move_piece(&stt, &drts[di], (opt - 1), distance);
         } else if (opt == 12) {  // TODO: Move Queen
             /* code */
         } else if (opt == 13) {  // TODO: Move King
@@ -168,7 +184,7 @@ short is_path_clear(State* stt, Direction* drt, short p, short distance) {
 
 // Implementation: Validation functions
 short move_piece(State* stt, Direction* drt, short p, short distance) {
-    if (distance > MAX_DISTANCE) return 0;
+    if (distance <= 0 || distance > MAX_DISTANCE) return 0;
 
     short x = stt->pieces[p].x;
     short y = stt->pieces[p].y;
