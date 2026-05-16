@@ -5,6 +5,7 @@
 #define BUFFER_SIZE 24
 #define PIECES_LEN 16
 #define CB_LEN 8
+#define MAX_DISTANCE 5
 
 #ifdef _WIN32
 #define CLS_CMD "cls"
@@ -43,11 +44,11 @@ typedef struct Direction {
 // Verification functions
 short is_inside(short x, short y);
 short is_empty(State* stt, short x, short y);
-short is_path_clear(State* stt, short x, short y);  // TODO: Implementation
+short is_path_clear(State* stt, Direction*, short p, short distance);
 
 // Validation functions;
 short move_pawn(State* stt, Direction* drt, short i);
-short move_rook(State* stt, short i);    // TODO: Implementation
+short move_rook(State* stt, Direction* drt, short i, short distance);
 short move_knight(State* stt, short i);  // TODO: Implementation
 short move_bishop(State* stt, short i);  // TODO: Implementation
 short move_queen(State* stt, short i);   // TODO: Implementation
@@ -67,17 +68,19 @@ void draw(State* stt);
 int main(void) {
     short opt = 0;
     short mov = 0;
+    short di = 0;
+    short distance = 0;
     char buffer[BUFFER_SIZE];
     State stt;
     Direction drts[8] = {
-        {.x = 0, .y = -1},   // North       0
-        {.x = 0, .y = 1},    // South       1
-        {.x = 1, .y = 0},    // East        2
-        {.x = -1, .y = 0},   // West        3
-        {.x = 1, .y = -1},   // Northeast   4
-        {.x = -1, .y = -1},  // Northwest   5
-        {.x = -1, .y = 1},   // Southeast   6
-        {.x = 1, .y = 1},    // Southwest   7
+        {.x = 0, .y = -1},   // North
+        {.x = 0, .y = 1},    // South
+        {.x = 1, .y = 0},    // East
+        {.x = -1, .y = 0},   // West
+        {.x = 1, .y = -1},   // Northeast
+        {.x = -1, .y = -1},  // Northwest
+        {.x = -1, .y = 1},   // Southeast
+        {.x = 1, .y = 1},    // Southwest
     };
 
     init(&stt);
@@ -102,8 +105,22 @@ int main(void) {
 
         if (opt >= 1 && opt <= 8) {  // Move Pawns
             mov = move_pawn(&stt, &drts[N], opt - 1);
-        } else if (opt == 9 || opt == 16) {  // TODO: Move Rooks
-            /* code */
+        } else if (opt == 9 || opt == 16) {  // Move Rooks
+            printf("\n[ %d ] NORTE  [ %d ] SUL  [ %d ] LESTE  [ %d ] OESTE \n", N, S, E, W);
+
+            do {
+                printf("\n> ESCOLHA UMA DIRECAO: ");
+
+                fgets(buffer, sizeof(buffer), stdin);
+                di = (short)strtol(buffer, NULL, 10);
+            } while (di != N && di != S && di != E && di != W);
+
+            printf("> QUANTIDADE DE CASAS: ");
+
+            fgets(buffer, sizeof(buffer), stdin);
+            distance = (short)strtol(buffer, NULL, 10);
+
+            mov = move_rook(&stt, &drts[di], (opt - 1), distance);
         } else if (opt == 10 || opt == 15) {  // TODO: Move Rights
             /* code */
         } else if (opt == 11 || opt == 14) {  // TODO: Move Bishops
@@ -135,6 +152,20 @@ short is_inside(short x, short y) { return x >= 0 && x < CB_LEN && y >= 0 && y <
 
 short is_empty(State* stt, short x, short y) { return stt->chessboard[y][x] == NULL; }
 
+short is_path_clear(State* stt, Direction* drt, short p, short distance) {
+    short x = stt->pieces[p].x;
+    short y = stt->pieces[p].y;
+
+    for (short i = 0; i < distance; i++) {
+        x += drt->x;
+        y += drt->y;
+
+        if (!is_empty(stt, x, y)) return 0;
+    }
+
+    return 1;
+}
+
 // Implementation: Validation functions
 short move_pawn(State* stt, Direction* drt, short i) {
     short y = stt->pieces[i].y;
@@ -149,6 +180,23 @@ short move_pawn(State* stt, Direction* drt, short i) {
 
     return 0;
 };
+
+short move_rook(State* stt, Direction* drt, short p, short distance) {
+    if (distance > MAX_DISTANCE) return 0;
+
+    short x = stt->pieces[p].x;
+    short y = stt->pieces[p].y;
+    short nx = x + drt->x * distance;
+    short ny = y + drt->y * distance;
+
+    if (is_inside(nx, ny) && is_path_clear(stt, drt, p, distance)) {
+        set_square_empty(stt, x, y);
+        update_piece(&stt->pieces[p], nx, ny);
+        return 1;
+    }
+
+    return 0;
+}
 
 // Implementation: Modification functions
 void init(State* stt) {
