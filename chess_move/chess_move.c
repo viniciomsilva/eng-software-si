@@ -44,15 +44,11 @@ typedef struct Direction {
 // Verification functions
 short is_inside(short x, short y);
 short is_empty(State* stt, short x, short y);
-short is_path_clear(State* stt, Direction*, short p, short distance);
+short is_path_clear(State* stt, Direction*, short pc, short distance);
 
 // Validation functions;
-// short move_pawn(State* stt, Direction* drt, short i);
-short move_piece(State* stt, Direction* drt, short i, short distance);
-short move_knight(State* stt, short i);  // TODO: Implementation
-// short move_bishop(State* stt, short i);  // TODO: Implementation
-// short move_queen(State* stt, short i);   // TODO: Implementation
-// short move_king(State* stt, short i);    // TODO: Implementation
+short move_piece(State* stt, Direction* drt, short pc, short distance);
+short move_knight(State* stt, short pc, short nx, short ny);
 
 // Modification functions;
 void init(State* stt);
@@ -60,7 +56,7 @@ void update_stt(State* stt);
 void update_piece(Piece* pc, short x, short y);
 void set_square_empty(State* stt, short x, short y);
 
-// Output functions
+// UI functions
 void clear(void);
 void draw(State* stt);
 
@@ -103,7 +99,9 @@ int main(void) {
         fgets(buffer, sizeof(buffer), stdin);
         opt = (short)strtol(buffer, NULL, 10);
 
-        if (opt >= 0 && opt <= PIECES_LEN) printf("  %s ", stt.pieces[(opt - 1)].label);
+        if (opt >= 0 && opt <= PIECES_LEN) {
+            printf("> PECA ESCOLHIDA:    %s \n", stt.pieces[(opt - 1)].label);
+        }
 
         if (opt >= 1 && opt <= 8) {  // Move Pawns
             mov = move_piece(&stt, &drts[N], (opt - 1), 1);
@@ -123,8 +121,51 @@ int main(void) {
             distance = (short)strtol(buffer, NULL, 10);
 
             mov = move_piece(&stt, &drts[di], (opt - 1), distance);
-        } else if (opt == 10 || opt == 15) {  // TODO: Move Rights
-            /* code */
+        } else if (opt == 10 || opt == 15) {  // Move Rights
+            printf("\n[ %d ] NORTE  [ %d ] SUL  [ %d ] LESTE  [ %d ] OESTE \n", N, S, E, W);
+
+            do {
+                printf("\n> ESCOLHA UMA DIRECAO: ");
+
+                fgets(buffer, sizeof(buffer), stdin);
+                di = (short)strtol(buffer, NULL, 10);
+            } while (di != N && di != S && di != E && di != W);
+
+            opt--;
+            short nx = stt.pieces[opt].x + drts[di].x * 2;
+            short ny = stt.pieces[opt].y + drts[di].y * 2;
+
+            printf("\n>> nx: %d", nx);
+            printf("\n>> ny: %d", ny);
+
+            if (di == N || di == S) {
+                printf("\n[ %d ] LESTE  [ %d ] OESTE \n", E, W);
+
+                do {
+                    printf("\n> ESCOLHA UMA DIRECAO: ");
+
+                    fgets(buffer, sizeof(buffer), stdin);
+                    di = (short)strtol(buffer, NULL, 10);
+                } while (di != E && di != W);
+
+                nx = stt.pieces[opt].x + drts[di].x;
+            } else {
+                printf("\n[ %d ] NORTE  [ %d ] SUL \n", N, S);
+
+                do {
+                    printf("\n> ESCOLHA UMA DIRECAO: ");
+
+                    fgets(buffer, sizeof(buffer), stdin);
+                    di = (short)strtol(buffer, NULL, 10);
+                } while (di != N && di != S);
+
+                ny = stt.pieces[opt].y + drts[di].y;
+            }
+
+            printf("\n>> nx: %d", nx);
+            printf("\n>> ny: %d", ny);
+
+            mov = move_knight(&stt, opt, nx, ny);
         } else if (opt == 11 || opt == 14) {  // Move Bishops
             printf("\n[ %d ] NORDESTE  [ %d ] NOROESTE  [ %d ] SUDOESTE  [ %d ] SUDOESTE \n", NE, NW, SE, SW);
 
@@ -141,10 +182,35 @@ int main(void) {
             distance = (short)strtol(buffer, NULL, 10);
 
             mov = move_piece(&stt, &drts[di], (opt - 1), distance);
-        } else if (opt == 12) {  // TODO: Move Queen
-            /* code */
-        } else if (opt == 13) {  // TODO: Move King
-            /* code */
+        } else if (opt == 12) {  // Move Queen
+            printf("\n[ %d ] NORTE     [ %d ] SUL       [ %d ] LESTE     [ %d ] OESTE ", N, S, E, W);
+            printf("\n[ %d ] NORDESTE  [ %d ] NOROESTE  [ %d ] SUDOESTE  [ %d ] SUDOESTE \n", NE, NW, SE, SW);
+
+            do {
+                printf("\n> ESCOLHA UMA DIRECAO: ");
+
+                fgets(buffer, sizeof(buffer), stdin);
+                di = (short)strtol(buffer, NULL, 10);
+            } while (di < N && di > SW);
+
+            printf("> QUANTIDADE DE CASAS: ");
+
+            fgets(buffer, sizeof(buffer), stdin);
+            distance = (short)strtol(buffer, NULL, 10);
+
+            mov = move_piece(&stt, &drts[di], (opt - 1), distance);
+        } else if (opt == 13) {  // Move King
+            printf("\n[ %d ] NORTE     [ %d ] SUL       [ %d ] LESTE     [ %d ] OESTE ", N, S, E, W);
+            printf("\n[ %d ] NORDESTE  [ %d ] NOROESTE  [ %d ] SUDOESTE  [ %d ] SUDOESTE \n", NE, NW, SE, SW);
+
+            do {
+                printf("\n> ESCOLHA UMA DIRECAO: ");
+
+                fgets(buffer, sizeof(buffer), stdin);
+                di = (short)strtol(buffer, NULL, 10);
+            } while (di < N && di > SW);
+
+            mov = move_piece(&stt, &drts[di], (opt - 1), 1);
         } else if (opt == 99) {
             mov = 1;
             printf("\nSAINDO...");
@@ -168,9 +234,9 @@ short is_inside(short x, short y) { return x >= 0 && x < CB_LEN && y >= 0 && y <
 
 short is_empty(State* stt, short x, short y) { return !stt->chessboard[y][x]; }
 
-short is_path_clear(State* stt, Direction* drt, short p, short distance) {
-    short x = stt->pieces[p].x;
-    short y = stt->pieces[p].y;
+short is_path_clear(State* stt, Direction* drt, short pc, short distance) {
+    short x = stt->pieces[pc].x;
+    short y = stt->pieces[pc].y;
 
     for (short i = 0; i < distance; i++) {
         x += drt->x;
@@ -183,17 +249,27 @@ short is_path_clear(State* stt, Direction* drt, short p, short distance) {
 }
 
 // Implementation: Validation functions
-short move_piece(State* stt, Direction* drt, short p, short distance) {
+short move_piece(State* stt, Direction* drt, short pc, short distance) {
     if (distance <= 0 || distance > MAX_DISTANCE) return 0;
 
-    short x = stt->pieces[p].x;
-    short y = stt->pieces[p].y;
+    short x = stt->pieces[pc].x;
+    short y = stt->pieces[pc].y;
     short nx = x + drt->x * distance;
     short ny = y + drt->y * distance;
 
-    if (is_inside(nx, ny) && is_path_clear(stt, drt, p, distance)) {
+    if (is_inside(nx, ny) && is_path_clear(stt, drt, pc, distance)) {
         set_square_empty(stt, x, y);
-        update_piece(&stt->pieces[p], nx, ny);
+        update_piece(&stt->pieces[pc], nx, ny);
+        return 1;
+    }
+
+    return 0;
+}
+
+short move_knight(State* stt, short pc, short nx, short ny) {
+    if (is_inside(nx, ny) && is_empty(stt, nx, ny)) {
+        set_square_empty(stt, stt->pieces[pc].x, stt->pieces[pc].y);
+        update_piece(&stt->pieces[pc], nx, ny);
         return 1;
     }
 
@@ -246,7 +322,7 @@ void update_piece(Piece* pc, short x, short y) {
 
 void set_square_empty(State* stt, short x, short y) { stt->chessboard[y][x] = NULL; }
 
-// Implementation: Output functions
+// Implementation: UI functions
 void clear(void) { system(CLS_CMD); }
 
 void draw(State* stt) {
