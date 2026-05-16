@@ -47,12 +47,12 @@ short is_empty(State* stt, short x, short y);
 short is_path_clear(State* stt, Direction*, short p, short distance);
 
 // Validation functions;
-short move_pawn(State* stt, Direction* drt, short i);
-short move_rook(State* stt, Direction* drt, short i, short distance);
+// short move_pawn(State* stt, Direction* drt, short i);
+short move_piece(State* stt, Direction* drt, short i, short distance);
 short move_knight(State* stt, short i);  // TODO: Implementation
-short move_bishop(State* stt, short i);  // TODO: Implementation
-short move_queen(State* stt, short i);   // TODO: Implementation
-short move_king(State* stt, short i);    // TODO: Implementation
+// short move_bishop(State* stt, short i);  // TODO: Implementation
+// short move_queen(State* stt, short i);   // TODO: Implementation
+// short move_king(State* stt, short i);    // TODO: Implementation
 
 // Modification functions;
 void init(State* stt);
@@ -104,7 +104,7 @@ int main(void) {
         opt = (short)strtol(buffer, NULL, 10);
 
         if (opt >= 1 && opt <= 8) {  // Move Pawns
-            mov = move_pawn(&stt, &drts[N], opt - 1);
+            mov = move_piece(&stt, &drts[N], (opt - 1), 1);
         } else if (opt == 9 || opt == 16) {  // Move Rooks
             printf("\n[ %d ] NORTE  [ %d ] SUL  [ %d ] LESTE  [ %d ] OESTE \n", N, S, E, W);
 
@@ -120,7 +120,7 @@ int main(void) {
             fgets(buffer, sizeof(buffer), stdin);
             distance = (short)strtol(buffer, NULL, 10);
 
-            mov = move_rook(&stt, &drts[di], (opt - 1), distance);
+            mov = move_piece(&stt, &drts[di], (opt - 1), distance);
         } else if (opt == 10 || opt == 15) {  // TODO: Move Rights
             /* code */
         } else if (opt == 11 || opt == 14) {  // TODO: Move Bishops
@@ -150,7 +150,7 @@ int main(void) {
 // Implementation: Verification functions
 short is_inside(short x, short y) { return x >= 0 && x < CB_LEN && y >= 0 && y < CB_LEN; }
 
-short is_empty(State* stt, short x, short y) { return stt->chessboard[y][x] == NULL; }
+short is_empty(State* stt, short x, short y) { return !stt->chessboard[y][x]; }
 
 short is_path_clear(State* stt, Direction* drt, short p, short distance) {
     short x = stt->pieces[p].x;
@@ -167,21 +167,7 @@ short is_path_clear(State* stt, Direction* drt, short p, short distance) {
 }
 
 // Implementation: Validation functions
-short move_pawn(State* stt, Direction* drt, short i) {
-    short y = stt->pieces[i].y;
-    short x = stt->pieces[i].x;
-    short ny = y + drt->y;
-
-    if (is_inside(x, ny) && is_empty(stt, x, ny)) {
-        set_square_empty(stt, x, y);
-        update_piece(&stt->pieces[i], x, ny);
-        return 1;
-    }
-
-    return 0;
-};
-
-short move_rook(State* stt, Direction* drt, short p, short distance) {
+short move_piece(State* stt, Direction* drt, short p, short distance) {
     if (distance > MAX_DISTANCE) return 0;
 
     short x = stt->pieces[p].x;
