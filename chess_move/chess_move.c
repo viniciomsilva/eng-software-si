@@ -2,16 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "src/utils.h"
+
 #define BUFFER_SIZE 24
 #define PIECES_LEN 16
 #define CB_LEN 8
 #define MAX_DISTANCE 5
-
-#ifdef _WIN32
-#define CLS_CMD "cls"
-#else
-#define CLS_CMD "clear"
-#endif
 
 enum CardinalIndex {
     N,
@@ -57,7 +53,6 @@ void update_piece(Piece* pc, short x, short y);
 void set_square_empty(State* stt, short x, short y);
 
 // UI functions
-void clear(void);
 void draw(State* stt);
 
 // Main function
@@ -323,8 +318,6 @@ void update_piece(Piece* pc, short x, short y) {
 void set_square_empty(State* stt, short x, short y) { stt->chessboard[y][x] = NULL; }
 
 // Implementation: UI functions
-void clear(void) { system(CLS_CMD); }
-
 void draw(State* stt) {
     for (short y = 0; y < CB_LEN; y++) {
         printf("%d - ", CB_LEN - y);
