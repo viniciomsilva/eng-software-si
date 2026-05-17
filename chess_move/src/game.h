@@ -41,7 +41,7 @@ short move_knight(State* stt, short pi, short fdi, short sdi);
 // Modification functions
 void init_chessboard(State* stt);
 void init_pieces(State* stt);
-void update_stt(State* stt);
+void refresh_chessboard(State* stt);
 void update_piece(Piece* pc, short x, short y);
 void set_square_empty(State* stt, short x, short y);
 

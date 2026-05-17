@@ -104,7 +104,7 @@ void init_pieces(State* stt) {
     }
 }
 
-void update_stt(State* stt) {
+void refresh_chessboard(State* stt) {
     for (short i = 0; i < PIECES_LEN; i++) {
         short y = stt->pieces[i].y;
         short x = stt->pieces[i].x;
