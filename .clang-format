@@ -3,4 +3,6 @@ BasedOnStyle: Google
 Language: C
 IndentWidth: 4
 ColumnLimit: 120
+
 BreakBeforeBraces: Attach
+AllowShortFunctionsOnASingleLine: None
