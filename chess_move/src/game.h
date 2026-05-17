@@ -8,7 +8,7 @@
 
 enum CardinalIndex { N, S, E, W, NE, NW, SE, SW };
 
-enum PiecesIndex { PA_START, PA_END = 7, RK1, KN1, BS1, QEN, KNG, BS2, KN2, RK2 };
+enum PiecesIndex { PA_START, PA_END = 7, RK1, KN1, BI1, QEN, KNG, BI2, KN2, RK2 };
 
 // Structure data
 typedef struct Direction {
