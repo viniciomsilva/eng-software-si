@@ -27,8 +27,6 @@ typedef struct State {
     Piece pieces[PIECES_LEN];
 } State;
 
-extern Direction DRTS[8];
-
 // Verification functions
 short is_inside(short x, short y);
 short is_empty(State* stt, short x, short y);
@@ -44,5 +42,8 @@ void init_pieces(State* stt);
 void refresh_chessboard(State* stt);
 void update_piece(Piece* pc, short x, short y);
 void set_square_empty(State* stt, short x, short y);
+
+// Flow control function
+short process_piece_turn(State* stt, short pi);
 
 #endif  // GAME_H

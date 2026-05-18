@@ -10,64 +10,79 @@
 void set_direction(short* di, short start, short end) {
     do {
         printf("\n> ESCOLHA UMA DIRECAO: ");
-        read_short(di);
+
+        *di = (short)input_long();
     } while (*di < start || *di > end);
 }
 
 // Output functions
 void draw_chessboard(State* stt) {
+    char* content;
+
     for (short y = 0; y < CB_LEN; y++) {
         printf("%d - ", CB_LEN - y);
+
         for (short x = 0; x < CB_LEN; x++) {
-            char* content = stt->chessboard[y][x];
+            content = stt->chessboard[y][x];
+
             printf(" %s ", (content) ? content : "   ");
-            if (x < CB_LEN - 1) printf("|");
+
+            if (x < CB_LEN - 1) {
+                printf("|");
+            }
         }
+
         printf("\n");
     }
+
     printf("      a     b     c     d     e     f     g     h  \n");
     printf("---------------------------------------------------\n\n");
 }
 
 void print_pieces_menu(State* stt) {
+    short n;
+
     for (short i = 0; i < PIECES_LEN; i++) {
-        printf("[ %2d ] %s  ", i + 1, stt->pieces[i].label);
-        if (!((i + 1) % 4)) printf("\n");
+        n = i + 1;
+
+        printf("[ %2d ] %s  ", n, stt->pieces[i].label);
+
+        if (!(n % 4)) {
+            printf("\n");
+        }
     }
-    printf("[ %d ] SAIR ", EXIT_GAME + 1);
+
+    printf("[ %d ] SAIR ", EXIT_GAME);
     printf("\n\n> ESCOLHA UMA PECA: ");
 }
 
 // Input functions
-void read_short(short* n) {
+long input_long() {
+    long value;
     char buffer[BUFFER_SIZE];
     char* endptr;
 
     while (1) {
-        if (fgets(buffer, sizeof(buffer), stdin) == NULL) continue;
+        if (!fgets(buffer, sizeof(buffer), stdin)) continue;
 
         buffer[strcspn(buffer, "\n")] = '\0';
+        value = strtol(buffer, &endptr, 10);
 
-        if (buffer[0] == '\n') {
-            printf("DIGITE APENAS NUMEROS...");
+        if (buffer[0] == '\0' || *endptr != '\0') {
+            printf("  DIGITE UM NUMERO: ");
             continue;
         }
 
-        long value = strtol(buffer, &endptr, 10);
-
-        if (*endptr != '\0') {
-            printf("DIGITE APENAS NUMEROS...");
-            continue;
-        }
-
-        *n = (short)value;
         break;
     }
+
+    return value;
 }
 
 void set_distance(short* dist) {
     printf("> QUANTIDADE DE CASAS: ");
-    read_short(dist);
+
+    *dist = (short)input_long();
 }
 
 void set_direction_x_or_y(short* di) {

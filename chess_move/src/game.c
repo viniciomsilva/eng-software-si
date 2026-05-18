@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "io.h"
+
 Direction DRTS[8] = {
     {.x = 0, .y = -1},   // N
     {.x = 0, .y = 1},    // S
@@ -33,6 +35,7 @@ short is_path_clear(State* stt, short pi, short di, short dist) {
 
         if (!is_empty(stt, x, y)) return 0;
     }
+
     return 1;
 }
 
@@ -51,6 +54,7 @@ short move_piece(State* stt, short pi, short di, short dist) {
         update_piece(&stt->pieces[pi], nx, ny);
         return 1;
     }
+
     return 0;
 }
 
@@ -61,23 +65,28 @@ short move_knight(State* stt, short pi, short fdi, short sdi) {
     short nx = x + DRTS[fdi].x * 2;
     short ny = y + DRTS[fdi].y * 2;
 
-    if (fdi == N || fdi == S)
+    if (fdi == N || fdi == S) {
         nx = x + DRTS[sdi].x;
-    else
+    } else {
         ny = y + DRTS[sdi].y;
+    }
 
     if (is_inside(nx, ny) && is_empty(stt, nx, ny)) {
         set_square_empty(stt, stt->pieces[pi].x, stt->pieces[pi].y);
         update_piece(&stt->pieces[pi], nx, ny);
         return 1;
     }
+
     return 0;
 }
 
 // Modification functions
 void init_chessboard(State* stt) {
-    for (short y = 0; y < CB_LEN; y++)
-        for (short x = 0; x < CB_LEN; x++) set_square_empty(stt, x, y);
+    for (short y = 0; y < CB_LEN; y++) {
+        for (short x = 0; x < CB_LEN; x++) {
+            set_square_empty(stt, x, y);
+        }
+    }
 }
 
 void init_pieces(State* stt) {
@@ -108,6 +117,7 @@ void refresh_chessboard(State* stt) {
     for (short i = 0; i < PIECES_LEN; i++) {
         short y = stt->pieces[i].y;
         short x = stt->pieces[i].x;
+
         stt->chessboard[y][x] = stt->pieces[i].label;
     }
 }
@@ -119,4 +129,42 @@ void update_piece(Piece* pc, short x, short y) {
 
 void set_square_empty(State* stt, short x, short y) {
     stt->chessboard[y][x] = NULL;
+}
+
+// Flow control function
+short process_piece_turn(State* stt, short pi) {
+    if (pi >= PA_START && pi <= PA_END) {
+        return move_piece(stt, pi, N, 1);
+    }
+
+    short di, dist;
+
+    if (pi == KN1 || pi == KN2) {
+        short sdi;
+
+        set_direction_x_or_y(&di);
+        set_second_direction(&di, &sdi);
+
+        return move_knight(stt, pi, di, sdi);
+    }
+
+    if (pi == RK1 || pi == RK2) {
+        set_direction_x_or_y(&di);
+    }
+
+    if (pi == BI1 || pi == BI2) {
+        set_direction_x_and_y(&di);
+    }
+
+    if (pi == QEN || pi == KNG) {
+        set_direction_for_all(&di);
+    }
+
+    if (pi == KNG) {
+        dist = 1;
+    } else {
+        set_distance(&dist);
+    }
+
+    return move_piece(stt, pi, di, dist);
 }

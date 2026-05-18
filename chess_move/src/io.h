@@ -3,15 +3,15 @@
 
 #include "game.h"
 
+#define EXIT_GAME 99
 #define BUFFER_SIZE 24
-#define EXIT_GAME 98
 
 // Output functions
 void draw_chessboard(State* stt);
 void print_pieces_menu(State* stt);
 
 // Input functions
-void read_short(short* n);
+long input_long();
 void set_distance(short* dist);
 void set_direction_x_or_y(short* di);
 void set_direction_x_and_y(short* di);
