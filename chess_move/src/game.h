@@ -4,6 +4,7 @@
 // Control data
 #define PIECES_LEN 16
 #define CB_LEN 8
+#define CB_LIMIT 7
 #define MAX_DISTANCE 5
 
 enum CardinalIndex { N, S, E, W, NE, NW, SE, SW };

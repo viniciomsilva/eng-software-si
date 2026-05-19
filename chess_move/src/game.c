@@ -6,19 +6,19 @@
 #include "io.h"
 
 Direction DRTS[8] = {
-    {.x = 0, .y = -1},   // N
-    {.x = 0, .y = 1},    // S
-    {.x = 1, .y = 0},    // E
-    {.x = -1, .y = 0},   // W
-    {.x = 1, .y = -1},   // NE
-    {.x = -1, .y = -1},  // NW
-    {.x = -1, .y = 1},   // SE
-    {.x = 1, .y = 1},    // SW
+    { .x = 0,  .y = -1 },  // N
+    { .x = 0,  .y = 1  },  // S
+    { .x = 1,  .y = 0  },  // E
+    { .x = -1, .y = 0  },  // W
+    { .x = 1,  .y = -1 },  // NE
+    { .x = -1, .y = -1 },  // NW
+    { .x = -1, .y = 1  },  // SE
+    { .x = 1,  .y = 1  },  // SW
 };
 
 // Verification functions
 short is_inside(short x, short y) {
-    return x >= 0 && x < CB_LEN && y >= 0 && y < CB_LEN;
+    return x >= 0 && x <= CB_LIMIT && y >= 0 && y <= CB_LIMIT;
 }
 
 short is_empty(State* stt, short x, short y) {
@@ -72,7 +72,7 @@ short move_knight(State* stt, short pi, short fdi, short sdi) {
     }
 
     if (is_inside(nx, ny) && is_empty(stt, nx, ny)) {
-        set_square_empty(stt, stt->pieces[pi].x, stt->pieces[pi].y);
+        set_square_empty(stt, x, y);
         update_piece(&stt->pieces[pi], nx, ny);
         return 1;
     }
@@ -91,10 +91,10 @@ void init_chessboard(State* stt) {
 
 void init_pieces(State* stt) {
     short x = 0;
-    short y = 6;
+    short y = CB_LEN - 2;
     char* labels[PIECES_LEN] = {
-        "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8",  // line 6
-        "RK1", "KN1", "BI1", "QEN", "KNG", "BI2", "KN2", "RK2",  // line 7
+        "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8",  // second-to-last row
+        "RK1", "KN1", "BI1", "QEN", "KNG", "BI2", "KN2", "RK2",  // last row
     };
 
     for (short i = 0; i < PIECES_LEN; i++) {
@@ -103,12 +103,12 @@ void init_pieces(State* stt) {
         stt->pieces[i].x = x;
         stt->pieces[i].y = y;
 
-        if (x < CB_LEN - 1) {
+        if (x < CB_LIMIT) {  // continue on this row
             x++;
             continue;
         }
 
-        y++;
+        y++;  // move to the next row
         x = 0;
     }
 }

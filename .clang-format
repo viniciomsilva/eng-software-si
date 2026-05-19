@@ -6,3 +6,7 @@ ColumnLimit: 120
 
 BreakBeforeBraces: Attach
 AllowShortFunctionsOnASingleLine: None
+
+Cpp11BracedListStyle: false
+SpacesInDesignatedInitializers: true
+AlignAfterOpenBracket: Align

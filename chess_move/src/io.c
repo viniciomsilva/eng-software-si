@@ -27,7 +27,7 @@ void draw_chessboard(State* stt) {
 
             printf(" %s ", (content) ? content : "   ");
 
-            if (x < CB_LEN - 1) {
+            if (x < CB_LIMIT) {
                 printf("|");
             }
         }
