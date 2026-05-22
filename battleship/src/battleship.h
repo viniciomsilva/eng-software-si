@@ -26,4 +26,4 @@ extern const char COLUMNS[BOARD_SIZE];
 // Modification function
 void init_boards(GameState*);
 
-#endif  // GAME_H
+#endif  // BATTLESHIP_H
