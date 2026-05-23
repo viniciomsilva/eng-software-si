@@ -1,6 +1,9 @@
 # vscode configs
 /.vscode
 
-# no important files
+# executable files
+/bin
 *.exe
+
+# no important files
 *.tst.txt
