@@ -1,7 +1,7 @@
-#ifndef IO_H
-#define IO_H
+#ifndef CHESS_MOVE_IO_H
+#define CHESS_MOVE_IO_H
 
-#include "game.h"
+#include "chess_move.h"
 
 #define EXIT_GAME 99
 #define BUFFER_SIZE 24
@@ -18,4 +18,4 @@ void set_direction_x_and_y(short* di);
 void set_direction_for_all(short* di);
 void set_second_direction(short* fdi, short* sdi);
 
-#endif  // IO_H
+#endif  // CHESS_MOVE_IO_H

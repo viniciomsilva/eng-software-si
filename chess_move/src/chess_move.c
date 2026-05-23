@@ -1,9 +1,9 @@
-#include "game.h"
+#include "chess_move.h"
 
 #include <stdio.h>
 #include <string.h>
 
-#include "io.h"
+#include "chess_move_io.h"
 
 Direction DRTS[8] = {
     { .x = 0,  .y = -1 },  // N

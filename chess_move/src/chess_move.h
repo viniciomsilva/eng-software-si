@@ -1,5 +1,5 @@
-#ifndef GAME_H
-#define GAME_H
+#ifndef CHESS_MOVE_H
+#define CHESS_MOVE_H
 
 // Control data
 #define PIECES_LEN 16
@@ -47,4 +47,4 @@ void set_square_empty(State* stt, short x, short y);
 // Flow control function
 short process_piece_turn(State* stt, short pi);
 
-#endif  // GAME_H
+#endif  // CHESS_MOVE_H

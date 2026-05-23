@@ -1,8 +1,8 @@
 #include <stdio.h>
 
-#include "src/game.h"
-#include "src/io.h"
 #include "../utils/utils.h"
+#include "src/chess_move.h"
+#include "src/chess_move_io.h"
 
 int main(void) {
     State stt;

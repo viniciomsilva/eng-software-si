@@ -1,10 +1,10 @@
-#include "io.h"
+#include "chess_move_io.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "game.h"
+#include "chess_move.h"
 
 // Auxiliar function
 void set_direction(short* di, short start, short end) {
