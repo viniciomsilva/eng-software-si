@@ -2,7 +2,7 @@
 
 #include "src/game.h"
 #include "src/io.h"
-#include "src/utils.h"
+#include "../utils/utils.h"
 
 int main(void) {
     State stt;
