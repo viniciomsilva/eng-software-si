@@ -1,7 +1,7 @@
 #include <stdio.h>
 
-#include "src/battleship.h"
-#include "src/battleship_io.h"
+#include "battleship.h"
+#include "battleship_io.h"
 
 int main(void) {
     GameState stt;
