@@ -17,7 +17,7 @@ void draw_line(char c, int len, const char* start, const char* end) {
 }
 
 // Output functions
-void draw_board(char draw_board[][BOARD_SIZE]) {
+void draw_board(char (*draw_board)[BOARD_SIZE]) {
     printf("   |");
 
     for (int i = 0; i < BOARD_SIZE; i++) {

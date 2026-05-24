@@ -4,6 +4,6 @@
 #include "battleship.h"
 
 // Output functions
-void draw_board(char draw_board[][BOARD_SIZE]);
+void draw_board(char (*draw_board)[BOARD_SIZE]);
 
 #endif  // BATTLESHIP_IO_H
