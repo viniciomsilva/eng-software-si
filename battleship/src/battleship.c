@@ -5,7 +5,7 @@
 
 #define DRTS_SZ 4
 
-Coord DIRECTIONS[DRTS_SZ] = {
+const Coord DIRECTIONS[DRTS_SZ] = {
     { .x = 0, .y = 1 },   // vertical
     { .x = 1, .y = 0 },   // horizontal
     { .x = 1, .y = 1 },   // positive diagonal
@@ -13,20 +13,20 @@ Coord DIRECTIONS[DRTS_SZ] = {
 };
 
 // Auxiliar functions
-int is_inside_board(int coord) {
-    return coord >= 0 && coord < BOARD_SZ;
+int is_inside_board(int value) {
+    return value >= 0 && value < BOARD_SZ;
 }
 
-int is_filledout(char (*board)[BOARD_SZ], int x, int y) {
-    return board[y][x];
+int is_filledout(char (*board)[BOARD_SZ], Coord coord) {
+    return board[coord.y][coord.x];
 }
 
-int is_anything(char (*board)[BOARD_SZ], int x, int y, int size, int drt) {
+int is_anything(char (*board)[BOARD_SZ], Coord coord, int size, int drt) {
     for (int i = 0; i < size; i++) {
-        if (is_filledout(board, x, y)) return 1;
+        if (is_filledout(board, coord)) return 1;
 
-        x += DIRECTIONS[drt].x;
-        y += DIRECTIONS[drt].y;
+        coord.x += DIRECTIONS[drt].x;
+        coord.y += DIRECTIONS[drt].y;
     }
 
     return 0;
@@ -49,27 +49,28 @@ int gen_coord(int size, int drt, int is_x) {
     }
 }
 
-void place_on_board(char (*board)[BOARD_SZ], Ship* ship, int x, int y, int drt) {
+void place_on_board(char (*board)[BOARD_SZ], Ship* ship, Coord coord, int drt) {
     for (int i = 0; i < ship->size; i++) {
-        board[y][x] = ship->label;
-        x += DIRECTIONS[drt].x;
-        y += DIRECTIONS[drt].y;
+        board[coord.y][coord.x] = ship->label;
+        coord.x += DIRECTIONS[drt].x;
+        coord.y += DIRECTIONS[drt].y;
     }
 }
 
 void create_ship(char (*board)[BOARD_SZ], Ship* ship, char label, int size) {
+    Coord coord = { 0 };
     int drt = draw(DRTS_SZ);
 
     ship->label = label;
     ship->size = size;
 
     while (1) {
-        int x = gen_coord(ship->size, drt, 1);
-        int y = gen_coord(ship->size, drt, 0);
+        coord.x = gen_coord(ship->size, drt, 1);
+        coord.y = gen_coord(ship->size, drt, 0);
 
-        if (is_anything(board, x, y, ship->size, drt)) continue;
+        if (is_anything(board, coord, ship->size, drt)) continue;
 
-        place_on_board(board, ship, x, y, drt);
+        place_on_board(board, ship, coord, drt);
         break;
     }
 }
