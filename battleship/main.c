@@ -7,6 +7,8 @@ int main(void) {
     GameState stt;
 
     init_boards(&stt);
-    draw_board(stt.draw_board);
+    init_ships(&stt);
+
+    draw_board(stt.control_board);  // REMEMBER: switch from control_board to draw_board
     return 0;
 }

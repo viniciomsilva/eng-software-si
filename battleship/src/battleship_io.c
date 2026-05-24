@@ -4,6 +4,8 @@
 
 #include "battleship.h"
 
+const char COLUMNS[BOARD_SZ] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J' };
+
 // Auxiliar functions
 void draw_line(char c, int len, const char* start, const char* end) {
     printf("\n%s", start);
@@ -17,25 +19,25 @@ void draw_line(char c, int len, const char* start, const char* end) {
 }
 
 // Output functions
-void draw_board(char (*draw_board)[BOARD_SIZE]) {
+void draw_board(char (*draw_board)[BOARD_SZ]) {
     printf("   |");
 
-    for (int i = 0; i < BOARD_SIZE; i++) {
+    for (int i = 0; i < BOARD_SZ; i++) {
         printf("  %c  |", COLUMNS[i]);
     }
 
     draw_line('-', 59, "   +", "+");
 
-    for (int y = 0; y < BOARD_SIZE; y++) {
+    for (int y = 0; y < BOARD_SZ; y++) {
         printf("%2d |", (y + 1));
 
-        for (int x = 0; x < BOARD_SIZE; x++) {
+        for (int x = 0; x < BOARD_SZ; x++) {
             char content = draw_board[y][x];
 
             printf("  %c  |", content ? content : ' ');
         }
 
-        if (y != BOARD_SIZE - 1) {
+        if (y != BOARD_SZ - 1) {
             draw_line(' ', 59, "   |", "|");
         }
     }

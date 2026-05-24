@@ -1,29 +1,30 @@
 #ifndef BATTLESHIP_H
 #define BATTLESHIP_H
 
-#define BOARD_SIZE 10
-#define VESSEL_MAX_SIZE 5
+#define BOARD_SZ 10
+#define SHIPS_QTY 5
+#define SHIPS_MAX_SZ 5
 
-typedef struct VesselCoord {
+typedef struct Coord {
     int x;
     int y;
-    int hit;
-} VesselCoord;
+    // int hit;
+} Coord;
 
-typedef struct Vessel {
-    VesselCoord coords[VESSEL_MAX_SIZE];
+typedef struct Ship {
+    // Coord coords[SHIPS_MAX_SZ];
     int size;
     char label;
-} Vessel;
+} Ship;
 
 typedef struct GameState {
-    char control_board[BOARD_SIZE][BOARD_SIZE];
-    char draw_board[BOARD_SIZE][BOARD_SIZE];
+    Ship ships[SHIPS_QTY];
+    char control_board[BOARD_SZ][BOARD_SZ];
+    char draw_board[BOARD_SZ][BOARD_SZ];
 } GameState;
-
-extern const char COLUMNS[BOARD_SIZE];
 
 // Modification function
 void init_boards(GameState*);
+void init_ships(GameState*);
 
 #endif  // BATTLESHIP_H
