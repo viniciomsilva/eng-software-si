@@ -8,11 +8,16 @@
 typedef struct Coord {
     int x;
     int y;
-    // int hit;
 } Coord;
 
+typedef struct ShipCoord {
+    int x;
+    int y;
+    int hit;
+} ShipCoord;
+
 typedef struct Ship {
-    // Coord coords[SHIPS_MAX_SZ];
+    ShipCoord coords[SHIPS_MAX_SZ];
     int size;
     char label;
 } Ship;

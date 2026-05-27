@@ -13,20 +13,29 @@ const Coord DIRECTIONS[DRTS_SZ] = {
 };
 
 // Auxiliar functions
-int is_inside_board(int value) {
-    return value >= 0 && value < BOARD_SZ;
+int is_inside_board(Coord c) {
+    return c.x >= 0 && c.x < BOARD_SZ && c.y >= 0 && c.y < BOARD_SZ;
 }
 
 int is_filledout(char (*board)[BOARD_SZ], Coord coord) {
+    if (!is_inside_board(coord)) return 1;
+
     return board[coord.y][coord.x];
 }
 
+Coord increment(Coord coord, int drt, int times) {
+    coord.x += times * DIRECTIONS[drt].x;
+    coord.y += times * DIRECTIONS[drt].y;
+
+    return coord;
+}
+
 int is_anything(char (*board)[BOARD_SZ], Coord coord, int size, int drt) {
-    for (int i = 0; i < size; i++) {
+    while (size > 0) {
         if (is_filledout(board, coord)) return 1;
 
-        coord.x += DIRECTIONS[drt].x;
-        coord.y += DIRECTIONS[drt].y;
+        coord = increment(coord, drt, 1);
+        size--;
     }
 
     return 0;
@@ -36,43 +45,48 @@ int draw(int lim) {
     return rand() % lim;
 }
 
-int gen_coord(int size, int drt, int is_x) {
-    int icr = is_x ? DIRECTIONS[drt].x : DIRECTIONS[drt].y;
+Coord gen_start_coord(int size, int drt) {
+    Coord start_coord = { 0 };
 
     while (1) {
-        int coord = draw(BOARD_SZ);
-        int last_coord = coord + size * icr;
+        start_coord.x = draw(BOARD_SZ);
+        start_coord.y = draw(BOARD_SZ);
 
-        if (!is_inside_board(last_coord)) continue;
+        Coord last_coord = increment(start_coord, drt, (size - 1));
 
-        return coord;
+        if (is_inside_board(last_coord)) break;
     }
+
+    return start_coord;
 }
 
 void place_on_board(char (*board)[BOARD_SZ], Ship* ship, Coord coord, int drt) {
     for (int i = 0; i < ship->size; i++) {
         board[coord.y][coord.x] = ship->label;
-        coord.x += DIRECTIONS[drt].x;
-        coord.y += DIRECTIONS[drt].y;
+        ship->coords[i].hit = 0;
+        ship->coords[i].x = coord.x;
+        ship->coords[i].y = coord.y;
+        coord = increment(coord, drt, 1);
     }
 }
 
 void create_ship(char (*board)[BOARD_SZ], Ship* ship, char label, int size) {
-    Coord coord = { 0 };
-    int drt = draw(DRTS_SZ);
+    int drt = 0;
+    Coord start_coord = { 0 };
 
     ship->label = label;
     ship->size = size;
 
     while (1) {
-        coord.x = gen_coord(ship->size, drt, 1);
-        coord.y = gen_coord(ship->size, drt, 0);
+        drt = draw(DRTS_SZ);
+        start_coord = gen_start_coord(ship->size, drt);
 
-        if (is_anything(board, coord, ship->size, drt)) continue;
+        if (is_anything(board, start_coord, ship->size, drt)) continue;
 
-        place_on_board(board, ship, coord, drt);
         break;
     }
+
+    place_on_board(board, ship, start_coord, drt);
 }
 
 // Modification functions
