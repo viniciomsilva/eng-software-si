@@ -41,7 +41,7 @@ int is_anything(char (*board)[BOARD_SZ], Coord coord, int size, int drt) {
     return 0;
 }
 
-int draw(int lim) {
+int draw_random(int lim) {
     return rand() % lim;
 }
 
@@ -49,8 +49,8 @@ Coord gen_start_coord(int size, int drt) {
     Coord start_coord = { 0 };
 
     while (1) {
-        start_coord.x = draw(BOARD_SZ);
-        start_coord.y = draw(BOARD_SZ);
+        start_coord.x = draw_random(BOARD_SZ);
+        start_coord.y = draw_random(BOARD_SZ);
 
         Coord last_coord = increment(start_coord, drt, (size - 1));
 
@@ -78,7 +78,7 @@ void create_ship(char (*board)[BOARD_SZ], Ship* ship, char label, int size) {
     ship->size = size;
 
     while (1) {
-        drt = draw(DRTS_SZ);
+        drt = draw_random(DRTS_SZ);
         start_coord = gen_start_coord(ship->size, drt);
 
         if (is_anything(board, start_coord, ship->size, drt)) continue;
