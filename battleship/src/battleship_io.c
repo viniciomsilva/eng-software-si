@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 
+#include "../../utils/utils.h"
 #include "battleship.h"
 
 #define LAST_POS_BOARD (BOARD_SZ - 1)
@@ -84,6 +85,15 @@ void draw_lines(char (*board)[BOARD_SZ], Projectile* arsenal) {
             putchar('\n');
         }
     }
+}
+
+// Input functions
+void read_player_name(char* player_name) {
+    char buffer[PLAYER_NAME_SZ];
+
+    read_str(buffer, sizeof(buffer));
+    transform_to_upper(buffer);
+    snprintf(player_name, PLAYER_NAME_SZ, "%s", buffer);
 }
 
 // Output functions

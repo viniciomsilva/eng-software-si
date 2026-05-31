@@ -5,6 +5,9 @@
 
 #define EXIT_OPT 0
 
+// Input functions
+void read_player_name(char* player_name);
+
 // Output functions
 void render(GameState*);
 
