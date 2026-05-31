@@ -6,18 +6,20 @@
 
 #define LAST_POS_BOARD (BOARD_SZ - 1)
 
-const char COLUMNS[BOARD_SZ] = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J' };
+const char COLUMNS[BOARD_SZ] = {
+    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+};
 
 // Auxiliar functions
 void draw_div(char c, int len, const char* start, const char* end) {
-    printf("\n%s", start);
+    printf("%s", start);
 
     while (len > 0) {
         putchar(c);
         len--;
     }
 
-    printf("%s\n", end);
+    printf("%s", end);
 }
 
 void draw_columns_letters() {
@@ -36,7 +38,22 @@ void draw_cell(char content, int x) {
     }
 }
 
-void draw_lines(char (*board)[BOARD_SZ]) {
+void print_player_data(const char* player_name, int score) {
+    printf("  > %s %dPT", player_name, score);
+}
+
+void print_proj_opt(int opt, const char* label, int ammunition) {
+    printf("  > [ %d ] %s (%d) ", opt, label, ammunition);
+}
+
+void print_exit_opt() {
+    printf("  > [ %d ] SAIR ", EXIT_OPT);
+}
+
+void draw_lines(char (*board)[BOARD_SZ], Projectile* arsenal) {
+    int ai = 0;
+    int menu_line = BOARD_SZ - ARSENAL_SZ + 1;
+
     for (int y = 0; y < BOARD_SZ; y++) {
         printf("%2d |", (y + 1));
 
@@ -46,16 +63,38 @@ void draw_lines(char (*board)[BOARD_SZ]) {
 
         putchar('|');
 
-        if (y != LAST_POS_BOARD) {
-            draw_div(' ', 59, "   |", "|");
+        if (menu_line == y && ai < ARSENAL_SZ) {
+            print_proj_opt((ai + 1), arsenal[ai].label, arsenal[ai].ammunition);
+            ai++;
+
+            draw_div(' ', 59, "\n   |", "|");
+            print_proj_opt((ai + 1), arsenal[ai].label, arsenal[ai].ammunition);
+            putchar('\n');
+
+            ai++;
+            menu_line++;
+
+            continue;
+        }
+
+        if (y == LAST_POS_BOARD) {
+            print_exit_opt();
+        } else {
+            draw_div(' ', 59, "\n   |", "|");
+            putchar('\n');
         }
     }
 }
 
 // Output functions
-void draw_board(char (*board)[BOARD_SZ]) {
+void render(GameState* stt) {
+    // REMEMBER: switch from control_board to draw_board
+    char (*board)[BOARD_SZ] = stt->control_board;
+    Projectile* arsenal = stt->player.arsenal;
+
     draw_columns_letters();
-    draw_div('-', 59, "   +", "+");
-    draw_lines(board);
-    draw_div('-', 59, "   +", "+");
+    print_player_data(stt->player.name, stt->player.score);
+    draw_div('-', 59, "\n   +", "+\n");
+    draw_lines(board, arsenal);
+    draw_div('-', 59, "\n   +", "+\n");
 }

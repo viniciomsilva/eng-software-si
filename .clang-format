@@ -8,5 +8,9 @@ BreakBeforeBraces: Attach
 AllowShortFunctionsOnASingleLine: None
 
 Cpp11BracedListStyle: false
+BinPackLongBracedList: false
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+AllowAllConstructorInitializersOnNextLine: false
+
 SpacesInDesignatedInitializers: true
 AlignAfterOpenBracket: Align

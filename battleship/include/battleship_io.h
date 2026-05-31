@@ -3,7 +3,9 @@
 
 #include "battleship.h"
 
+#define EXIT_OPT 0
+
 // Output functions
-void draw_board(char (*draw_board)[BOARD_SZ]);
+void render(GameState*);
 
 #endif  // BATTLESHIP_IO_H

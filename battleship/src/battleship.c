@@ -1,15 +1,26 @@
 #include "battleship.h"
 
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
+
+#define SMN_DAM_SZ 9
+#define TPD_DAM_SZ 7
+#define BMB_DAM_SZ 5
+#define GNF_DAM_SZ 1
+
+#define SMN 3
+#define TPD 2
+#define BMB 1
+#define GNF 0
 
 #define DRTS_SZ 4
 
 const Coord DIRECTIONS[DRTS_SZ] = {
-    { .x = 0, .y = 1 },   // vertical
-    { .x = 1, .y = 0 },   // horizontal
-    { .x = 1, .y = 1 },   // positive diagonal
-    { .x = -1, .y = 1 },  // negative diagonal
+    { .x = 0, .y = 1 },
+    { .x = 1, .y = 0 },
+    { .x = 1, .y = 1 },
+    { .x = -1, .y = 1 },
 };
 
 // Auxiliar functions
@@ -89,7 +100,83 @@ void create_ship(char (*board)[BOARD_SZ], Ship* ship, char label, int size) {
     place_on_board(board, ship, start_coord, drt);
 }
 
+void create_projectile(Projectile* proj, Coord* damage, int ammunition, const char* label) {
+    proj->ammunition = ammunition;
+    strncpy(proj->label, label, PROJECTILE_LABEL_SZ);
+    memcpy(proj->damage, damage, DAMAGE_MAX_SZ);
+}
+
+void gen_damage(Coord* dest, int dan_map) {
+    switch (dan_map) {
+        case GNF: {
+            Coord src[GNF_DAM_SZ] = {
+                { .x = 0, .y = 0 },
+            };
+            memcpy(dest, src, sizeof(src));
+            break;
+        }
+
+        case BMB: {
+            Coord src[BMB_DAM_SZ] = {
+                { .x = 0, .y = 0 },   //
+                { .x = -1, .y = 0 },  //
+                { .x = 1, .y = 0 },   //
+                { .x = 0, .y = -1 },  //
+                { .x = 0, .y = 1 },   //
+            };
+            memcpy(dest, src, sizeof(src));
+            break;
+        }
+
+        case TPD: {
+            Coord src[TPD_DAM_SZ] = {
+                { .x = 0, .y = 0 },   //
+                { .x = -1, .y = 0 },  //
+                { .x = -2, .y = 0 },  //
+                { .x = 1, .y = 0 },   //
+                { .x = 2, .y = 0 },   //
+                { .x = 0, .y = -1 },  //
+                { .x = 0, .y = 1 },   //
+            };
+            memcpy(dest, src, sizeof(src));
+            break;
+        }
+
+        case SMN: {
+            Coord src[SMN_DAM_SZ] = {
+                { .x = 0, .y = 0 },   //
+                { .x = -1, .y = 0 },  //
+                { .x = 1, .y = 0 },   //
+                { .x = 0, .y = -1 },  //
+                { .x = -2, .y = 1 },  //
+                { .x = -1, .y = 1 },  //
+                { .x = 0, .y = 1 },   //
+                { .x = 1, .y = 1 },   //
+                { .x = 2, .y = 1 },   //
+            };
+            memcpy(dest, src, sizeof(src));
+            break;
+        }
+    }
+}
+
 // Modification functions
+void init_player_state(Player* player, const char* name) {
+    int amm[ARSENAL_SZ] = { 25, 4, 4, 3 };
+    const char* labels[ARSENAL_SZ] = { "GNF", "BMB", "TPD", "SMN" };
+
+    strncpy(player->name, name, (PLAYER_NAME_SZ - 1));
+    player->name[(PLAYER_NAME_SZ - 1)] = '\0';
+    player->score = 0;
+
+    for (int i = 0; i < ARSENAL_SZ; i++) {
+        Coord damage[DAMAGE_MAX_SZ] = { 0 };
+
+        gen_damage(damage, i);
+        create_projectile(&player->arsenal[i], damage, amm[i], labels[i]);
+    }
+}
+
 void init_boards(GameState* stt) {
     for (int y = 0; y < BOARD_SZ; y++) {
         for (int x = 0; x < BOARD_SZ; x++) {
@@ -101,14 +188,6 @@ void init_boards(GameState* stt) {
 
 void init_ships(GameState* stt) {
     srand(time(NULL));
-
-    /*
-        Aircraft carrier    A       5 coords
-        Battleship          B       4 coords
-        Submarine           S       3 coords
-        Destroyer           D       3 coords
-        Patrol boat         P       2 coords
-     */
 
     int lengths[SHIPS_QTY] = { 5, 4, 3, 3, 2 };
     char labels[SHIPS_QTY] = { 'A', 'B', 'S', 'D', 'P' };
