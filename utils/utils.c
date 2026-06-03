@@ -11,7 +11,32 @@ void clear(void) {
 
 void clean_buffer(void) {
     int c;
+
     while ((c = getchar()) != '\n' && c != EOF);
+}
+
+long read_long(int buffer_size, const char* err) {
+    long value;
+    char buffer[buffer_size];
+    char* endptr;
+
+    while (1) {
+        read_str(buffer, sizeof(buffer));
+
+        if (!buffer) continue;
+
+        buffer[strcspn(buffer, "\n")] = '\0';
+        value = strtol(buffer, &endptr, 10);
+
+        if (buffer[0] == '\0' || *endptr != '\0') {
+            printf(err);
+            continue;
+        }
+
+        break;
+    }
+
+    return value;
 }
 
 void read_str(char* buffer, int buffer_size) {

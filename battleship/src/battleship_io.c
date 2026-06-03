@@ -1,11 +1,13 @@
 #include "battleship_io.h"
 
+#include <ctype.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "../../utils/utils.h"
 #include "battleship.h"
 
-#define LAST_POS_BOARD (BOARD_SZ - 1)
+#define LAST_POS (BOARD_SZ - 1)
 
 const char COLUMNS[BOARD_SZ] = {
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
@@ -24,6 +26,7 @@ void draw_div(char c, int len, const char* start, const char* end) {
 }
 
 void draw_columns_letters() {
+    putchar('\n');
     printf("   |");
 
     for (int i = 0; i < BOARD_SZ; i++) {
@@ -34,7 +37,7 @@ void draw_columns_letters() {
 void draw_cell(char content, int x) {
     printf("  %c  ", content ? content : ' ');
 
-    if (x != LAST_POS_BOARD) {
+    if (x != LAST_POS) {
         putchar(' ');
     }
 }
@@ -78,7 +81,7 @@ void draw_lines(char (*board)[BOARD_SZ], Projectile* arsenal) {
             continue;
         }
 
-        if (y == LAST_POS_BOARD) {
+        if (y == LAST_POS) {
             print_exit_opt();
         } else {
             draw_div(' ', 59, "\n   |", "|");
@@ -94,6 +97,27 @@ void read_player_name(char* player_name) {
     read_str(buffer, sizeof(buffer));
     transform_to_upper(buffer);
     snprintf(player_name, PLAYER_NAME_SZ, "%s", buffer);
+}
+
+Coord read_coord() {
+    char buffer[BUFFER_SZ];
+    Coord coord = { .x = BOARD_SZ, .y = BOARD_SZ };
+
+    read_str(buffer, sizeof(buffer));
+    transform_to_upper(buffer);
+
+    if (buffer[0] == '\0') return coord;
+
+    if (buffer[0] < COLUMNS[0] || buffer[0] > COLUMNS[LAST_POS]) return coord;
+
+    if (!isdigit(buffer[1])) return coord;
+
+    if (buffer[2] != '\0' && !isdigit(buffer[2])) return coord;
+
+    coord.x = buffer[0] - COLUMNS[0];
+    coord.y = atoi(&buffer[1]) - 1;
+
+    return coord;
 }
 
 // Output functions
