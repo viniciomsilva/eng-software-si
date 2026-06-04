@@ -101,7 +101,7 @@ void read_player_name(char* player_name) {
 
 Coord read_coord() {
     char buffer[BUFFER_SZ];
-    Coord coord = { 0 };
+    Coord coord = { .x = -1, .y = -1 };
 
     read_str(buffer, sizeof(buffer));
     transform_to_upper(buffer);
@@ -122,8 +122,7 @@ Coord read_coord() {
 
 // Output functions
 void render(GameState* stt) {
-    // REMEMBER: switch from control_board to draw_board
-    char (*board)[BOARD_SZ] = stt->control_board;
+    char (*board)[BOARD_SZ] = stt->draw_board;
     Projectile* arsenal = stt->player.arsenal;
 
     draw_columns_letters();
