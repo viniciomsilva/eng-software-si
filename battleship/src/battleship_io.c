@@ -101,7 +101,7 @@ void read_player_name(char* player_name) {
 
 Coord read_coord() {
     char buffer[BUFFER_SZ];
-    Coord coord = { .x = BOARD_SZ, .y = BOARD_SZ };
+    Coord coord = { 0 };
 
     read_str(buffer, sizeof(buffer));
     transform_to_upper(buffer);
