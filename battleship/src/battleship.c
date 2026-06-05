@@ -194,25 +194,19 @@ void update_ships_state(Ship* ships, char target_label) {
     }
 }
 
+void fill_in(char (*board)[BOARD_SZ], Coord coord, char content) {
+    board[coord.y][coord.x] = content;
+}
+
 void init_player_state(Player* player, const char* name) {
-    const int amm[ARSENAL_SZ] = {
-        25,
-        4,
-        4,
-        3,
-    };
+    const int amm[ARSENAL_SZ] = { 25, 4, 4, 3 };
     const int sizes[ARSENAL_SZ] = {
         GNF_DAM_SZ,
         BMB_DAM_SZ,
         TPD_DAM_SZ,
         SMN_DAM_SZ,
     };
-    const char* labels[ARSENAL_SZ] = {
-        "GNF",
-        "BMB",
-        "TPD",
-        "SMN",
-    };
+    const char* labels[ARSENAL_SZ] = { "GNF", "BMB", "TPD", "SMN" };
 
     strncpy(player->name, name, (PLAYER_NAME_SZ - 1));
     player->name[(PLAYER_NAME_SZ - 1)] = '\0';
@@ -227,10 +221,15 @@ void init_player_state(Player* player, const char* name) {
 }
 
 void init_boards(GameState* stt) {
+    Coord coord = { 0 };
+
     for (int y = 0; y < BOARD_SZ; y++) {
+        coord.y = y;
+
         for (int x = 0; x < BOARD_SZ; x++) {
-            stt->control_board[y][x] = '\0';
-            stt->draw_board[y][x] = '\0';
+            coord.x = x;
+            fill_in(stt->control_board, coord, '\0');
+            fill_in(stt->draw_board, coord, '\0');
         }
     }
 }
@@ -238,12 +237,8 @@ void init_boards(GameState* stt) {
 void init_ships(GameState* stt) {
     srand(time(NULL));
 
-    const int lengths[SHIPS_QTY] = {
-        5, 4, 3, 3, 2,
-    };
-    const char labels[SHIPS_QTY] = {
-        'A', 'B', 'S', 'D', 'P',
-    };
+    const int lengths[SHIPS_QTY] = { 5, 4, 3, 3, 2 };
+    const char labels[SHIPS_QTY] = { 'A', 'B', 'S', 'D', 'P' };
 
     for (int i = 0; i < SHIPS_QTY; i++) {
         create_ship(stt->control_board, &stt->ships[i], labels[i], lengths[i]);
@@ -293,7 +288,7 @@ int fire(GameState* stt, int proj_index, Coord coord) {
             success = 1;
         }
 
-        stt->draw_board[target.y][target.x] = result.who;
+        fill_in(stt->draw_board, target, result.who);
     }
 
     stt->player.arsenal[proj_index].ammunition--;
