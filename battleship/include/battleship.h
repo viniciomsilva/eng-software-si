@@ -40,6 +40,11 @@ typedef struct Player {
     char name[PLAYER_NAME_SZ];
 } Player;
 
+typedef struct Collision {
+    int collided;
+    char who;
+} Collision;
+
 typedef struct GameState {
     Player player;
     Ship ships[SHIPS_QTY];

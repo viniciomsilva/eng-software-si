@@ -16,6 +16,8 @@
 
 #define DRTS_SZ 4
 
+#define WATER_LABEL '~'
+
 const Coord DIRECTIONS[DRTS_SZ] = {
     { .x = 0, .y = 1 },
     { .x = 1, .y = 0 },
@@ -164,15 +166,52 @@ void gen_damage(Coord* dest, int proj_type) {
     }
 }
 
+Collision was_there_collision(char (*board)[BOARD_SZ], Coord target) {
+    char content = board[target.y][target.x];
+    Collision result = {
+        .collided = 0,
+        .who = WATER_LABEL,
+    };
+
+    if (content == '\0') return result;
+
+    result.collided = 1;
+    result.who = content;
+    return result;
+}
+
+void update_ships_state(Ship* ships, char target_label) {
+    for (int i = 0; i < SHIPS_QTY; i++) {
+        if (target_label == ships[i].label) {
+            ships[i].size--;
+
+            if (!ships[i].size) {
+                ships[i].is_sunk = 1;
+            }
+
+            break;
+        }
+    }
+}
+
 void init_player_state(Player* player, const char* name) {
     const int amm[ARSENAL_SZ] = {
-        25, 4, 4, 3,
+        25,
+        4,
+        4,
+        3,
     };
     const int sizes[ARSENAL_SZ] = {
-        GNF_DAM_SZ, BMB_DAM_SZ, TPD_DAM_SZ, SMN_DAM_SZ,
+        GNF_DAM_SZ,
+        BMB_DAM_SZ,
+        TPD_DAM_SZ,
+        SMN_DAM_SZ,
     };
     const char* labels[ARSENAL_SZ] = {
-        "GNF", "BMB", "TPD", "SMN",
+        "GNF",
+        "BMB",
+        "TPD",
+        "SMN",
     };
 
     strncpy(player->name, name, (PLAYER_NAME_SZ - 1));
@@ -245,32 +284,16 @@ int fire(GameState* stt, int proj_index, Coord coord) {
     for (int i = 0; i < proj.damage_size; i++) {
         Coord target = increment_coord(coord, proj.damage[i], 1);
 
-        if (!is_inside_board(target)) continue;
+        if (is_filledout(stt->draw_board, target)) continue;
 
-        if (stt->draw_board[target.y][target.x]) continue;
+        Collision result = was_there_collision(stt->control_board, target);
 
-        char ship_label = stt->control_board[target.y][target.x];
-
-        if (ship_label != '\0') {
-            stt->draw_board[target.y][target.x] = ship_label;
-
-            for (int s = 0; s < SHIPS_QTY; s++) {
-                if (ship_label == stt->ships[s].label) {
-                    stt->ships[s].size--;
-
-                    if (!stt->ships[s].size) {
-                        stt->ships[s].is_sunk = 1;
-                    }
-
-                    success = 1;
-                    break;
-                }
-            }
-
-            continue;
+        if (result.collided) {
+            update_ships_state(stt->ships, result.who);
+            success = 1;
         }
 
-        stt->draw_board[target.y][target.x] = '~';
+        stt->draw_board[target.y][target.x] = result.who;
     }
 
     stt->player.arsenal[proj_index].ammunition--;
