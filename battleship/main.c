@@ -26,6 +26,18 @@ int main(void) {
         clear();
         render(&stt);
 
+        if (did_sink_all_ships(&stt.player)) {
+            printf("   > GAME WINS: VOCE AFUNDOU TODOS AS EMBARCACOES... \n");
+
+            goto finish;
+        }
+
+        if (did_run_out_ammunition(&stt.player)) {
+            printf("   > GAME OVER: VOCE GASTOU TODAS NAS MUNICOES... \n");
+
+            goto finish;
+        }
+
         printf("\n   ATACAR \n");
 
         do {
@@ -34,7 +46,7 @@ int main(void) {
 
             if (opt == EXIT_OPT) goto finish;
 
-            if (validate_proj(--opt)) break;
+            if (validate_proj(stt.player.arsenal, --opt)) break;
 
             pause_game("   > ERRO: PROJETIL INVALIDO. ");
         } while (1);

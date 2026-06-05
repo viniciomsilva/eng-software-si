@@ -54,3 +54,13 @@ void transform_to_upper(char* str) {
         str[i] = toupper(str[i]);
     }
 }
+
+int sum(const int *numbers, int size) {
+    int result = 0;
+
+    for (int i = 0; i < size; i++) {
+        result += numbers[i];
+    }
+
+    return result;
+}

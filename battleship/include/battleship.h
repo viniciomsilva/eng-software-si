@@ -36,6 +36,7 @@ typedef struct Projectile {
 
 typedef struct Player {
     Projectile arsenal[ARSENAL_SZ];
+    int amm_total;
     int score;
     char name[PLAYER_NAME_SZ];
 } Player;
@@ -54,7 +55,9 @@ typedef struct GameState {
 
 // Validation functions
 int validate_coord(Coord);
-int validate_proj(int proj_type);
+int validate_proj(Projectile*, int proj_i);
+int did_sink_all_ships(Player*);
+int did_run_out_ammunition(Player*);
 
 // Modification function
 void init_game_state(GameState*, const char* player_name);

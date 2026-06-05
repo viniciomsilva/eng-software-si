@@ -4,6 +4,8 @@
 #include <string.h>
 #include <time.h>
 
+#include "../../utils/utils.h"
+
 #define SMN_DAM_SZ 9
 #define TPD_DAM_SZ 7
 #define BMB_DAM_SZ 5
@@ -211,6 +213,7 @@ void init_player_state(Player* player, const char* name) {
     strncpy(player->name, name, (PLAYER_NAME_SZ - 1));
     player->name[(PLAYER_NAME_SZ - 1)] = '\0';
     player->score = 0;
+    player->amm_total = sum(amm, ARSENAL_SZ);
 
     for (int i = 0; i < ARSENAL_SZ; i++) {
         Coord damage[DAMAGE_MAX_SZ] = { 0 };
@@ -246,14 +249,20 @@ void init_ships(GameState* stt) {
 }
 
 // Validation functions
-int validate_proj(int proj_type) {
-    if (proj_type < 0 || proj_type >= ARSENAL_SZ) return 0;
-
-    return 1;
+int validate_proj(Projectile* arsenal, int proj_i) {
+    return ((proj_i >= 0 || proj_i < ARSENAL_SZ) && arsenal[proj_i].ammunition);
 }
 
 int validate_coord(Coord coord) {
     return is_inside_board(coord);
+}
+
+int did_sink_all_ships(Player* player) {
+    return player->score == SHIPS_QTY;
+}
+
+int did_run_out_ammunition(Player* player) {
+    return !player->amm_total;
 }
 
 // Modification functions
@@ -274,7 +283,7 @@ void update_player_score(Player* player, Ship* ships) {
 
 int fire(GameState* stt, int proj_index, Coord coord) {
     int success = 0;
-    Projectile *proj = &stt->player.arsenal[proj_index];
+    Projectile* proj = &stt->player.arsenal[proj_index];
 
     for (int i = 0; i < proj->damage_size; i++) {
         Coord target = increment_coord(coord, proj->damage[i], 1);
@@ -291,6 +300,7 @@ int fire(GameState* stt, int proj_index, Coord coord) {
         fill_in(stt->draw_board, target, result.who);
     }
 
+    stt->player.amm_total--;
     proj->ammunition--;
     return success;
 }
