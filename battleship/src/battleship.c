@@ -274,10 +274,10 @@ void update_player_score(Player* player, Ship* ships) {
 
 int fire(GameState* stt, int proj_index, Coord coord) {
     int success = 0;
-    Projectile proj = stt->player.arsenal[proj_index];
+    Projectile *proj = &stt->player.arsenal[proj_index];
 
-    for (int i = 0; i < proj.damage_size; i++) {
-        Coord target = increment_coord(coord, proj.damage[i], 1);
+    for (int i = 0; i < proj->damage_size; i++) {
+        Coord target = increment_coord(coord, proj->damage[i], 1);
 
         if (is_filledout(stt->draw_board, target)) continue;
 
@@ -291,6 +291,6 @@ int fire(GameState* stt, int proj_index, Coord coord) {
         fill_in(stt->draw_board, target, result.who);
     }
 
-    stt->player.arsenal[proj_index].ammunition--;
+    proj->ammunition--;
     return success;
 }
