@@ -22,30 +22,25 @@ typedef struct Ship {
 } Ship;
 
 typedef struct Projectile {
-    Coord damage[DAMAGE_MAX_SZ];
     int ammunition;
     int damage_size;
     char label[PROJECTILE_LABEL_SZ];
+    Coord damage[DAMAGE_MAX_SZ];
 } Projectile;
 
 typedef struct Player {
-    Projectile arsenal[ARSENAL_SZ];
     int amm_total;
     int score;
     char name[PLAYER_NAME_SZ];
+    Projectile arsenal[ARSENAL_SZ];
 } Player;
 
-typedef struct Collision {
-    int collided;
-    char who;
-} Collision;
-
 typedef struct GameState {
-    Player player;
-    Ship ships[SHIPS_QTY];
     int running;
     char control_board[BOARD_SZ][BOARD_SZ];
     char draw_board[BOARD_SZ][BOARD_SZ];
+    Ship ships[SHIPS_QTY];
+    Player player;
 } GameState;
 
 // Validation functions

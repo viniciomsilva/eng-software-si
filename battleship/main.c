@@ -12,26 +12,26 @@ void pause_game(const char* msg) {
 }
 
 int main(void) {
-    int opt;
+    int option;
     char player_name[PLAYER_NAME_SZ];
-    GameState stt;
     Coord coord_attack;
+    GameState state;
 
     printf("\n  > DIGITE SEU NOME [ MAX: %d LETRAS ]: ", (PLAYER_NAME_SZ - 1));
     read_player_name(player_name);
 
-    init_game_state(&stt, player_name);
+    init_game_state(&state, player_name);
 
     do {
         clear();
-        render(&stt);
+        render(&state);
 
-        if (did_sink_all_ships(&stt.player)) {
+        if (did_sink_all_ships(&state.player)) {
             printf("   > GAME WINS: VOCE AFUNDOU TODOS AS EMBARCACOES... \n");
             break;
         }
 
-        if (did_run_out_ammunition(&stt.player)) {
+        if (did_run_out_ammunition(&state.player)) {
             printf("   > GAME OVER: VOCE GASTOU TODAS NAS MUNICOES... \n");
             break;
         }
@@ -40,19 +40,19 @@ int main(void) {
 
         do {
             printf("   > PROJETIL..: ");
-            opt = (int)read_long(BUFFER_SZ, "   > DIGITE UM NUMERO..: ");
+            option = (int)read_long(BUFFER_SZ, "   > DIGITE UM NUMERO..: ");
 
-            if (opt == EXIT_OPT) {
-                finish_game(&stt);
+            if (option == EXIT_OPT) {
+                finish_game(&state);
                 break;
             }
 
-            if (validate_projectile(stt.player.arsenal, --opt)) break;
+            if (validate_projectile(state.player.arsenal, --option)) break;
 
             pause_game("PROJETIL INVALIDO.");
         } while (true);
 
-        if (!stt.running) break;
+        if (!state.running) break;
 
         do {
             printf("   > COORDENADA: ");
@@ -63,10 +63,10 @@ int main(void) {
             pause_game("COORDENADA INVALIDA.");
         } while (true);
 
-        if (fire(&stt, opt, coord_attack)) {
-            update_player_score(&stt.player, stt.ships);
+        if (fire(&state, option, coord_attack)) {
+            update_player_score(&state.player, state.ships);
         }
-    } while (stt.running);
+    } while (state.running);
 
     printf("   > FINALIZANDO...");
     return 0;

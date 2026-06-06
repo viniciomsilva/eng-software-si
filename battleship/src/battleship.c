@@ -39,11 +39,16 @@ const Coord DIRECTIONS[DRTS_SZ] = {
 };
 
 // Auxiliar structures
+typedef struct Collision {
+    int collided;
+    char who;
+} Collision;
+
 typedef struct ProjectilePattern {
-    Coord* damage;
-    const char* label;
-    int damage_size;
     int ammunition;
+    int damage_size;
+    const char* label;
+    Coord* damage;
 } ProjectilePattern;
 
 // Auxiliar functions
@@ -240,10 +245,9 @@ void init_player_state(Player* player, const char* name) {
         "TPD",
         "SMN",
     };
-    const int player_name_real_size = PLAYER_NAME_SZ - 1;
 
-    strncpy(player->name, name, player_name_real_size);
-    player->name[player_name_real_size] = '\0';
+    strncpy(player->name, name, (PLAYER_NAME_SZ - 1));
+    player->name[(PLAYER_NAME_SZ - 1)] = '\0';
     player->score = 0;
     player->amm_total = sum(ammunition, ARSENAL_SZ);
 
