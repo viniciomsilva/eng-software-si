@@ -1,5 +1,5 @@
+#include <stdbool.h>
 #include <stdio.h>
-#include <string.h>
 
 #include "../utils/utils.h"
 #include "battleship.h"
@@ -7,7 +7,8 @@
 
 void pause_game(const char* msg) {
     printf(msg);
-    printf("PRESSIONE QUALQUER TECLA PARA CONTINUAR...");
+    printf("   > ERRO: %s \n", msg);
+    printf("     PRESSIONE QUALQUER TECLA PARA CONTINUAR...");
     getchar();
 }
 
@@ -49,8 +50,8 @@ int main(void) {
 
             if (validate_proj(stt.player.arsenal, --opt)) break;
 
-            pause_game("   > ERRO: PROJETIL INVALIDO. ");
-        } while (1);
+            pause_game("PROJETIL INVALIDO.");
+        } while (true);
 
         if (!stt.running) break;
 
@@ -60,8 +61,8 @@ int main(void) {
 
             if (validate_coord(coord_attack)) break;
 
-            pause_game("   > ERRO: COORDENADA INVALIDA. ");
-        } while (1);
+            pause_game("COORDENADA INVALIDA.");
+        } while (true);
 
         if (fire(&stt, opt, coord_attack)) {
             update_player_score(&stt.player, stt.ships);
