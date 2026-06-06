@@ -56,7 +56,7 @@ typedef struct GameState {
 
 // Validation functions
 int validate_coord(Coord);
-int validate_proj(Projectile*, int proj_i);
+int validate_projectile(Projectile*, int i);
 int did_sink_all_ships(Player*);
 int did_run_out_ammunition(Player*);
 
@@ -64,6 +64,6 @@ int did_run_out_ammunition(Player*);
 void finish_game(GameState*);
 void init_game_state(GameState*, const char* player_name);
 void update_player_score(Player*, Ship*);
-int fire(GameState*, int proj_index, Coord coord);
+int fire(GameState*, int projectile_i, Coord coord);
 
 #endif  // BATTLESHIP_H

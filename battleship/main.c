@@ -47,7 +47,7 @@ int main(void) {
                 break;
             }
 
-            if (validate_proj(stt.player.arsenal, --opt)) break;
+            if (validate_projectile(stt.player.arsenal, --opt)) break;
 
             pause_game("PROJETIL INVALIDO.");
         } while (true);

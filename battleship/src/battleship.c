@@ -6,19 +6,30 @@
 
 #include "../../utils/utils.h"
 
-#define SMN_DAM_SZ 9
-#define TPD_DAM_SZ 7
-#define BMB_DAM_SZ 5
-#define GNF_DAM_SZ 1
-
-#define SMN 3
-#define TPD 2
-#define BMB 1
-#define GNF 0
-
 #define DRTS_SZ 4
 
 #define WATER_LABEL '~'
+
+enum ProjectileDamageSizes {
+    GNF_DAMAGE_SIZE = 1,
+    BMB_DAMAGE_SIZE = 5,
+    TPD_DAMAGE_SIZE = 7,
+    SMN_DAMAGE_SIZE = 9,
+};
+
+enum ProjectileIndexes {
+    GNF,
+    BMB,
+    TPD,
+    SMN,
+};
+
+enum ProjectileAmmunition {
+    SMN_AMMUNITION = 3,
+    BMB_AMMUNITION = 4,
+    TPD_AMMUNITION = 4,
+    GNF_AMMUNITION = 25,
+};
 
 const Coord DIRECTIONS[DRTS_SZ] = {
     { .x = 0, .y = 1 },
@@ -26,6 +37,14 @@ const Coord DIRECTIONS[DRTS_SZ] = {
     { .x = 1, .y = 1 },
     { .x = -1, .y = 1 },
 };
+
+// Auxiliar structures
+typedef struct ProjectilePattern {
+    Coord* damage;
+    const char* label;
+    int damage_size;
+    int ammunition;
+} ProjectilePattern;
 
 // Auxiliar functions
 int is_inside_board(Coord c) {
@@ -103,17 +122,19 @@ void create_ship(char (*board)[BOARD_SZ], Ship* ship, char label, int size) {
     place_on_board(board, ship, start_coord, drt);
 }
 
-void create_projectile(Projectile* proj, Coord* damage, int amm, int damage_size, const char* label) {
-    proj->ammunition = amm;
-    proj->damage_size = damage_size;
-    strncpy(proj->label, label, PROJECTILE_LABEL_SZ);
-    memcpy(proj->damage, damage, (DAMAGE_MAX_SZ * sizeof(Coord)));
+void create_projectile(Projectile* projectile, ProjectilePattern pattern) {
+    int mem_size_damage = DAMAGE_MAX_SZ * sizeof(Coord);
+
+    projectile->ammunition = pattern.ammunition;
+    projectile->damage_size = pattern.damage_size;
+    strncpy(projectile->label, pattern.label, PROJECTILE_LABEL_SZ);
+    memcpy(projectile->damage, pattern.damage, mem_size_damage);
 }
 
-void gen_damage(Coord* dest, int proj_type) {
-    switch (proj_type) {
+void gen_damage(Coord* dest, int projectile_i) {
+    switch (projectile_i) {
         case GNF: {
-            Coord src[GNF_DAM_SZ] = {
+            Coord src[GNF_DAMAGE_SIZE] = {
                 { .x = 0, .y = 0 },
             };
 
@@ -122,7 +143,7 @@ void gen_damage(Coord* dest, int proj_type) {
         }
 
         case BMB: {
-            Coord src[BMB_DAM_SZ] = {
+            Coord src[BMB_DAMAGE_SIZE] = {
                 { .x = 0, .y = 0 },   //
                 { .x = -1, .y = 0 },  //
                 { .x = 1, .y = 0 },   //
@@ -135,7 +156,7 @@ void gen_damage(Coord* dest, int proj_type) {
         }
 
         case TPD: {
-            Coord src[TPD_DAM_SZ] = {
+            Coord src[TPD_DAMAGE_SIZE] = {
                 { .x = 0, .y = 0 },   //
                 { .x = -1, .y = 0 },  //
                 { .x = -2, .y = 0 },  //
@@ -150,7 +171,7 @@ void gen_damage(Coord* dest, int proj_type) {
         }
 
         case SMN: {
-            Coord src[SMN_DAM_SZ] = {
+            Coord src[SMN_DAMAGE_SIZE] = {
                 { .x = 0, .y = 0 },   //
                 { .x = -1, .y = 0 },  //
                 { .x = 1, .y = 0 },   //
@@ -201,25 +222,42 @@ void fill_in(char (*board)[BOARD_SZ], Coord coord, char content) {
 }
 
 void init_player_state(Player* player, const char* name) {
-    const int amm[ARSENAL_SZ] = { 25, 4, 4, 3 };
-    const int sizes[ARSENAL_SZ] = {
-        GNF_DAM_SZ,
-        BMB_DAM_SZ,
-        TPD_DAM_SZ,
-        SMN_DAM_SZ,
+    const int ammunition[ARSENAL_SZ] = {
+        GNF_AMMUNITION,
+        BMB_AMMUNITION,
+        TPD_AMMUNITION,
+        SMN_AMMUNITION,
     };
-    const char* labels[ARSENAL_SZ] = { "GNF", "BMB", "TPD", "SMN" };
+    const int damage_sizes[ARSENAL_SZ] = {
+        GNF_DAMAGE_SIZE,
+        BMB_DAMAGE_SIZE,
+        TPD_DAMAGE_SIZE,
+        SMN_DAMAGE_SIZE,
+    };
+    const char* labels[ARSENAL_SZ] = {
+        "GNF",
+        "BMB",
+        "TPD",
+        "SMN",
+    };
+    const int player_name_real_size = PLAYER_NAME_SZ - 1;
 
-    strncpy(player->name, name, (PLAYER_NAME_SZ - 1));
-    player->name[(PLAYER_NAME_SZ - 1)] = '\0';
+    strncpy(player->name, name, player_name_real_size);
+    player->name[player_name_real_size] = '\0';
     player->score = 0;
-    player->amm_total = sum(amm, ARSENAL_SZ);
+    player->amm_total = sum(ammunition, ARSENAL_SZ);
 
     for (int i = 0; i < ARSENAL_SZ; i++) {
         Coord damage[DAMAGE_MAX_SZ] = { 0 };
-
         gen_damage(damage, i);
-        create_projectile(&player->arsenal[i], damage, amm[i], sizes[i], labels[i]);
+
+        ProjectilePattern pattern = {
+            .ammunition = ammunition[i],
+            .label = labels[i],
+            .damage = damage,
+            .damage_size = damage_sizes[i],
+        };
+        create_projectile(&player->arsenal[i], pattern);
     }
 }
 
@@ -249,8 +287,8 @@ void init_ships(GameState* stt) {
 }
 
 // Validation functions
-int validate_proj(Projectile* arsenal, int proj_i) {
-    return proj_i >= 0 && proj_i < ARSENAL_SZ && arsenal[proj_i].ammunition;
+int validate_projectile(Projectile* arsenal, int i) {
+    return i >= 0 && i < ARSENAL_SZ && arsenal[i].ammunition;
 }
 
 int validate_coord(Coord coord) {
@@ -286,12 +324,12 @@ void update_player_score(Player* player, Ship* ships) {
     }
 }
 
-int fire(GameState* stt, int proj_index, Coord coord) {
+int fire(GameState* stt, int projectile_i, Coord coord) {
     int success = 0;
-    Projectile* proj = &stt->player.arsenal[proj_index];
+    Projectile* projectile = &stt->player.arsenal[projectile_i];
 
-    for (int i = 0; i < proj->damage_size; i++) {
-        Coord target = increment_coord(coord, proj->damage[i], 1);
+    for (int i = 0; i < projectile->damage_size; i++) {
+        Coord target = increment_coord(coord, projectile->damage[i], 1);
 
         if (is_filledout(stt->draw_board, target)) continue;
 
@@ -306,6 +344,6 @@ int fire(GameState* stt, int proj_index, Coord coord) {
     }
 
     stt->player.amm_total--;
-    proj->ammunition--;
+    projectile->ammunition--;
     return success;
 }
