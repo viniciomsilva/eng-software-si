@@ -9,12 +9,6 @@
 
 #define SHIPS_QTY 5
 
-typedef struct AttackStatus {
-    int proj_fail;
-    int coord_fail;
-    int success;
-} AttackStatus;
-
 typedef struct Coord {
     int x;
     int y;
