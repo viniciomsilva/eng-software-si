@@ -49,6 +49,7 @@ typedef struct Collision {
 typedef struct GameState {
     Player player;
     Ship ships[SHIPS_QTY];
+    int running;
     char control_board[BOARD_SZ][BOARD_SZ];
     char draw_board[BOARD_SZ][BOARD_SZ];
 } GameState;
@@ -60,6 +61,7 @@ int did_sink_all_ships(Player*);
 int did_run_out_ammunition(Player*);
 
 // Modification function
+void finish_game(GameState*);
 void init_game_state(GameState*, const char* player_name);
 void update_player_score(Player*, Ship*);
 int fire(GameState*, int proj_index, Coord coord);

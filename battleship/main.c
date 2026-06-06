@@ -22,20 +22,18 @@ int main(void) {
 
     init_game_state(&stt, player_name);
 
-    while (1) {
+    do {
         clear();
         render(&stt);
 
         if (did_sink_all_ships(&stt.player)) {
             printf("   > GAME WINS: VOCE AFUNDOU TODOS AS EMBARCACOES... \n");
-
-            goto finish;
+            break;
         }
 
         if (did_run_out_ammunition(&stt.player)) {
             printf("   > GAME OVER: VOCE GASTOU TODAS NAS MUNICOES... \n");
-
-            goto finish;
+            break;
         }
 
         printf("\n   ATACAR \n");
@@ -44,12 +42,17 @@ int main(void) {
             printf("   > PROJETIL..: ");
             opt = (int)read_long(BUFFER_SZ, "   > DIGITE UM NUMERO..: ");
 
-            if (opt == EXIT_OPT) goto finish;
+            if (opt == EXIT_OPT) {
+                finish_game(&stt);
+                break;
+            }
 
             if (validate_proj(stt.player.arsenal, --opt)) break;
 
             pause_game("   > ERRO: PROJETIL INVALIDO. ");
         } while (1);
+
+        if (!stt.running) break;
 
         do {
             printf("   > COORDENADA: ");
@@ -63,9 +66,8 @@ int main(void) {
         if (fire(&stt, opt, coord_attack)) {
             update_player_score(&stt.player, stt.ships);
         }
-    }
+    } while (stt.running);
 
-finish:
     printf("   > FINALIZANDO...");
     return 0;
 }

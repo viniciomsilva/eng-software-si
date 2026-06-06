@@ -266,7 +266,12 @@ int did_run_out_ammunition(Player* player) {
 }
 
 // Modification functions
+void finish_game(GameState* stt) {
+    stt->running = 0;
+}
+
 void init_game_state(GameState* stt, const char* player_name) {
+    stt->running = 1;
     init_boards(stt);
     init_ships(stt);
     init_player_state(&stt->player, player_name);
