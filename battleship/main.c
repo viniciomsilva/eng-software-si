@@ -6,7 +6,6 @@
 #include "battleship_io.h"
 
 void pause_game(const char* msg) {
-    printf(msg);
     printf("   > ERRO: %s \n", msg);
     printf("     PRESSIONE QUALQUER TECLA PARA CONTINUAR...");
     getchar();
