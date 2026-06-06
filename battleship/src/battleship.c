@@ -250,7 +250,7 @@ void init_ships(GameState* stt) {
 
 // Validation functions
 int validate_proj(Projectile* arsenal, int proj_i) {
-    return ((proj_i >= 0 || proj_i < ARSENAL_SZ) && arsenal[proj_i].ammunition);
+    return proj_i >= 0 && proj_i < ARSENAL_SZ && arsenal[proj_i].ammunition;
 }
 
 int validate_coord(Coord coord) {
