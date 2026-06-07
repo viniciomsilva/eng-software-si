@@ -14,10 +14,10 @@
 #define PAB 'P'  // PATROL BOAT
 
 // Projectiles indexes
-#define GNF 0
-#define BMB 1
-#define TPD 2
-#define SMN 3
+#define GNF 0  // GUNFIRE
+#define BMB 1  // BOMB
+#define TPD 2  // TORPEDO
+#define SMN 3  // SEA MINE
 
 // Structures sizes
 #define AIC_LENGTH 5
