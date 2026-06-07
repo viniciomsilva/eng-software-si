@@ -74,6 +74,11 @@ Coord increment_coord(Coord initial, Coord direction, int displacement) {
     return initial;
 }
 
+void decrement_ammunition(int* projetil_ammunition, int* player_total_ammunition) {
+    *projetil_ammunition -= 1;
+    *player_total_ammunition -= 1;
+}
+
 bool is_anything(char (*board)[BOARD_SIZE], Coord coord, int size, int drt) {
     while (size > 0) {
         if (is_filledout(board, coord)) return true;
@@ -356,7 +361,6 @@ bool fire(GameState* stt, int projectile_i, Coord coord) {
         fill_in(stt->draw_board, target, result.who);
     }
 
-    stt->player.ammunition_total--;
-    projectile->ammunition--;
+    decrement_ammunition(&projectile->ammunition, &stt->player.ammunition_total);
     return success;
 }

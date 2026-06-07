@@ -67,6 +67,6 @@ int main(void) {
         }
     } while (state.running);
 
-    pause_game("   > FINALIZANDO...");
+    pause_game("   > FINALIZANDO... \n");
     return 0;
 }
