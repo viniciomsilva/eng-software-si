@@ -120,12 +120,12 @@ Coord read_coord(void) {
 }
 
 // Output functions
-void render(GameState* stt) {
-    char (*board)[BOARD_SIZE] = stt->draw_board;
-    Projectile* arsenal = stt->player.arsenal;
+void render(GameState* state) {
+    char (*board)[BOARD_SIZE] = state->draw_board;
+    Projectile* arsenal = state->player.arsenal;
 
     draw_columns_letters();
-    print_player_data(&stt->player);
+    print_player_data(&state->player);
     draw_division('-', "\n   +", "+\n");
     draw_lines(board, arsenal);
     draw_division('-', "\n   +", "+\n");

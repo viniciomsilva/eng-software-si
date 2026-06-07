@@ -50,15 +50,15 @@ typedef struct GameState {
 } GameState;
 
 // Validation functions
-bool validate_coord(Coord);
-bool validate_projectile(Projectile*, int i);
-bool did_sink_all_ships(Player*);
-bool did_run_out_ammunition(Player*);
+bool validate_coord(Coord coord);
+bool validate_projectile(Projectile* arsenal, int i);
+bool did_sink_all_ships(Player* player);
+bool did_run_out_ammunition(Player* player);
 
 // Modification function
-void finish_game(GameState*);
-void init_game_state(GameState*, const char* player_name);
-void update_player_score(Player*, Ship*);
-bool fire(GameState*, int projectile_i, Coord coord);
+void finish_game(GameState* state);
+void init_game_state(GameState* state, const char* player_name);
+void update_player_score(Player* player, Ship* ships);
+bool fire(GameState* state, int projectile_i, Coord coord);
 
 #endif  // BATTLESHIP_H

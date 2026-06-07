@@ -275,7 +275,7 @@ void init_player_state(Player* player, const char* name) {
     }
 }
 
-void init_boards(GameState* stt) {
+void init_boards(GameState* state) {
     Coord coord = { 0 };
 
     for (int y = 0; y < BOARD_SIZE; y++) {
@@ -283,13 +283,13 @@ void init_boards(GameState* stt) {
 
         for (int x = 0; x < BOARD_SIZE; x++) {
             coord.x = x;
-            fill_in(stt->control_board, coord, EMPTY_LABEL);
-            fill_in(stt->draw_board, coord, EMPTY_LABEL);
+            fill_in(state->control_board, coord, EMPTY_LABEL);
+            fill_in(state->draw_board, coord, EMPTY_LABEL);
         }
     }
 }
 
-void init_ships(GameState* stt) {
+void init_ships(GameState* state) {
     srand(time(NULL));
 
     const int lengths[SHIPS_QTY] = {
@@ -300,7 +300,7 @@ void init_ships(GameState* stt) {
     };
 
     for (int i = 0; i < SHIPS_QTY; i++) {
-        create_ship(stt->control_board, &stt->ships[i], labels[i], lengths[i]);
+        create_ship(state->control_board, &state->ships[i], labels[i], lengths[i]);
     }
 }
 
@@ -322,15 +322,15 @@ bool did_run_out_ammunition(Player* player) {
 }
 
 // Modification functions
-void finish_game(GameState* stt) {
-    stt->running = false;
+void finish_game(GameState* state) {
+    state->running = false;
 }
 
-void init_game_state(GameState* stt, const char* player_name) {
-    stt->running = true;
-    init_boards(stt);
-    init_ships(stt);
-    init_player_state(&stt->player, player_name);
+void init_game_state(GameState* state, const char* player_name) {
+    state->running = true;
+    init_boards(state);
+    init_ships(state);
+    init_player_state(&state->player, player_name);
 }
 
 void update_player_score(Player* player, Ship* ships) {
@@ -342,25 +342,25 @@ void update_player_score(Player* player, Ship* ships) {
     }
 }
 
-bool fire(GameState* stt, int projectile_i, Coord coord) {
+bool fire(GameState* state, int projectile_i, Coord coord) {
     bool success = false;
-    Projectile* projectile = &stt->player.arsenal[projectile_i];
+    Projectile* projectile = &state->player.arsenal[projectile_i];
 
     for (int i = 0; i < projectile->damage_size; i++) {
         Coord target = increment_coord(coord, projectile->damage[i], 1);
 
-        if (is_filledout(stt->draw_board, target)) continue;
+        if (is_filledout(state->draw_board, target)) continue;
 
-        Collision result = was_there_collision(stt->control_board, target);
+        Collision result = was_there_collision(state->control_board, target);
 
         if (result.collided) {
-            update_ships_state(stt->ships, result.who);
+            update_ships_state(state->ships, result.who);
             success = true;
         }
 
-        fill_in(stt->draw_board, target, result.who);
+        fill_in(state->draw_board, target, result.who);
     }
 
-    decrement_ammunition(&projectile->ammunition, &stt->player.ammunition_total);
+    decrement_ammunition(&projectile->ammunition, &state->player.ammunition_total);
     return success;
 }

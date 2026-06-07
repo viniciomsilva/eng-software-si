@@ -11,6 +11,6 @@ void read_player_name(char* player_name);
 Coord read_coord(void);
 
 // Output functions
-void render(GameState*);
+void render(GameState* state);
 
 #endif  // BATTLESHIP_IO_H
