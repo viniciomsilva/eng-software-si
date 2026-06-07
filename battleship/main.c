@@ -13,11 +13,11 @@ void pause_game(const char* msg) {
 
 int main(void) {
     int option;
-    char player_name[PLAYER_NAME_SZ];
+    char player_name[PLAYER_NAME_SIZE];
     Coord coord_attack;
     GameState state;
 
-    printf("\n  > DIGITE SEU NOME [ MAX: %d LETRAS ]: ", (PLAYER_NAME_SZ - 1));
+    printf("\n  > DIGITE SEU NOME [ MAX: %d LETRAS ]: ", (PLAYER_NAME_SIZE - 1));
     read_player_name(player_name);
 
     init_game_state(&state, player_name);
@@ -40,9 +40,9 @@ int main(void) {
 
         do {
             printf("   > PROJETIL..: ");
-            option = (int)read_long(BUFFER_SZ, "   > DIGITE UM NUMERO..: ");
+            option = (int)read_long(BUFFER_SIZE, "   > DIGITE UM NUMERO..: ");
 
-            if (option == EXIT_OPT) {
+            if (option == EXIT_OPTION) {
                 finish_game(&state);
                 break;
             }

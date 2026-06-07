@@ -1,13 +1,18 @@
 #ifndef BATTLESHIP_H
 #define BATTLESHIP_H
 
-#define PLAYER_NAME_SZ 11
-#define BOARD_SZ 10
-#define DAMAGE_MAX_SZ 9
-#define PROJECTILE_LABEL_SZ 4
-#define ARSENAL_SZ 4
+#define WATER_LABEL '~'
+#define EMPTY_LABEL '\0'
 
 #define SHIPS_QTY 5
+
+enum Sizes {
+    ARSENAL_SIZE = 4,
+    PROJECTILE_LABEL_SIZE = 4,
+    DAMAGE_MAX_SIZE = 9,
+    BOARD_SIZE = 10,
+    PLAYER_NAME_SIZE = 11,
+};
 
 typedef struct Coord {
     int x;
@@ -24,21 +29,21 @@ typedef struct Ship {
 typedef struct Projectile {
     int ammunition;
     int damage_size;
-    char label[PROJECTILE_LABEL_SZ];
-    Coord damage[DAMAGE_MAX_SZ];
+    char label[PROJECTILE_LABEL_SIZE];
+    Coord damage[DAMAGE_MAX_SIZE];
 } Projectile;
 
 typedef struct Player {
-    int amm_total;
+    int ammunition_total;
     int score;
-    char name[PLAYER_NAME_SZ];
-    Projectile arsenal[ARSENAL_SZ];
+    char name[PLAYER_NAME_SIZE];
+    Projectile arsenal[ARSENAL_SIZE];
 } Player;
 
 typedef struct GameState {
     int running;
-    char control_board[BOARD_SZ][BOARD_SZ];
-    char draw_board[BOARD_SZ][BOARD_SZ];
+    char control_board[BOARD_SIZE][BOARD_SIZE];
+    char draw_board[BOARD_SIZE][BOARD_SIZE];
     Ship ships[SHIPS_QTY];
     Player player;
 } GameState;

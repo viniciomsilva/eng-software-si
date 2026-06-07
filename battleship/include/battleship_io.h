@@ -3,8 +3,8 @@
 
 #include "battleship.h"
 
-#define EXIT_OPT 0
-#define BUFFER_SZ 4
+#define EXIT_OPTION 0
+#define BUFFER_SIZE 4
 
 // Input functions
 Coord read_coord();

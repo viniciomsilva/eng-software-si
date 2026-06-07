@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define BUFFER_SZ 104
+#define BUFFER_SIZE 104
 #define CITY_NAME_SZ 52
 #define CODE_SZ 6
 #define CARDS_SZ 2
@@ -45,7 +45,7 @@ void pause(void) {
 }
 
 void register_cards(Card* cds, int size) {
-    char buffer[BUFFER_SZ];
+    char buffer[BUFFER_SIZE];
 
     for (int i = 0; i < size; i++) {
         clean_terminal();
@@ -340,7 +340,7 @@ void main_menu(void) {
 
 int main(void) {
     Card cds[CARDS_SZ];
-    char buffer[BUFFER_SZ];
+    char buffer[BUFFER_SIZE];
     short opt = 0;
 
     main_menu();
