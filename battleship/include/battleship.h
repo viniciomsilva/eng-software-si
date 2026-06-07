@@ -21,7 +21,7 @@ typedef struct Coord {
 } Coord;
 
 typedef struct Ship {
-    int size;
+    int length;
     bool is_sunk;
     bool has_been_recorded;
     char label;

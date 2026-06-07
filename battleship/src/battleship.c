@@ -13,23 +13,24 @@
 #define DES 'D'  // DESTROYER
 #define PAB 'P'  // PATROL BOAT
 
+// Ship lengths
+#define AIC_LENGTH 5
+#define BSH_LENGTH 4
+#define SUB_LENGTH 3
+#define DES_LENGTH 3
+#define PAB_LENGTH 2
+
 // Projectiles indexes
 #define GNF 0  // GUNFIRE
 #define BMB 1  // BOMB
 #define TPD 2  // TORPEDO
 #define SMN 3  // SEA MINE
 
-// Structures sizes
-#define AIC_LENGTH 5
-#define BSH_LENGTH 4
-#define SUB_LENGTH 3
-#define DES_LENGTH 3
-#define PAB_LENGTH 2
+// Projectiles damage sizes
 #define GNF_DAMAGE_SIZE 1
 #define BMB_DAMAGE_SIZE 5
 #define TPD_DAMAGE_SIZE 7
 #define SMN_DAMAGE_SIZE 9
-#define DIRECTIONS_SIZE 4
 
 // Projectiles ammunition
 #define GNF_AMMUNITION 25
@@ -37,6 +38,7 @@
 #define TPD_AMMUNITION 4
 #define SMN_AMMUNITION 3
 
+#define DIRECTIONS_SIZE 4
 #define PLAYER_NAME_REAL_SIZE (PLAYER_NAME_SIZE - 1)
 
 const Coord DIRECTIONS[DIRECTIONS_SIZE] = {
@@ -53,9 +55,8 @@ typedef struct Collision {
 } Collision;
 
 typedef struct ShipPattern {
-    int size;
+    int length;
     char label;
-    Ship* ship;
 } ShipPattern;
 
 typedef struct ProjectilePattern {
@@ -116,31 +117,31 @@ Coord gen_start_coord(int size, int drt) {
 }
 
 void place_on_board(char (*board)[BOARD_SIZE], Ship* ship, Coord coord, int drt) {
-    for (int i = 0; i < ship->size; i++) {
+    for (int i = 0; i < ship->length; i++) {
         board[coord.y][coord.x] = ship->label;
         coord = increment_coord(coord, DIRECTIONS[drt], 1);
     }
 }
 
-void create_ship(char (*board)[BOARD_SIZE], ShipPattern pattern) {
+void create_ship(char (*board)[BOARD_SIZE], Ship* ship, ShipPattern pattern) {
     int drt = 0;
     Coord start_coord = { 0 };
 
-    pattern.ship->label = pattern.label;
-    pattern.ship->size = pattern.size;
-    pattern.ship->is_sunk = false;
-    pattern.ship->has_been_recorded = false;
+    ship->label = pattern.label;
+    ship->length = pattern.length;
+    ship->is_sunk = false;
+    ship->has_been_recorded = false;
 
     while (true) {
         drt = draw_random(DIRECTIONS_SIZE);
-        start_coord = gen_start_coord(pattern.size, drt);
+        start_coord = gen_start_coord(pattern.length, drt);
 
-        if (is_anything(board, start_coord, pattern.size, drt)) continue;
+        if (is_anything(board, start_coord, pattern.length, drt)) continue;
 
         break;
     }
 
-    place_on_board(board, pattern.ship, start_coord, drt);
+    place_on_board(board, ship, start_coord, drt);
 }
 
 void create_projectile(Projectile* projectile, ProjectilePattern pattern) {
@@ -227,9 +228,9 @@ Collision was_there_collision(char (*board)[BOARD_SIZE], Coord target) {
 void update_ships_state(Ship* ships, char target_label) {
     for (int i = 0; i < SHIPS_QTY; i++) {
         if (target_label == ships[i].label) {
-            ships[i].size--;
+            ships[i].length--;
 
-            if (!ships[i].size) {
+            if (!ships[i].length) {
                 ships[i].is_sunk = true;
             }
 
@@ -308,11 +309,10 @@ void init_ships(GameState* state) {
     for (int i = 0; i < SHIPS_QTY; i++) {
         ShipPattern pattern = {
             .label = labels[i],
-            .size = lengths[i],
-            .ship = &state->ships[i],
+            .length = lengths[i],
         };
 
-        create_ship(state->control_board, pattern);
+        create_ship(state->control_board, &state->ships[i], pattern);
     }
 }
 
