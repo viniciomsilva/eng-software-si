@@ -6,13 +6,12 @@
 
 #define SHIPS_QTY 5
 
-enum Sizes {
-    ARSENAL_SIZE = 4,
-    PROJECTILE_LABEL_SIZE = 4,
-    DAMAGE_MAX_SIZE = 9,
-    BOARD_SIZE = 10,
-    PLAYER_NAME_SIZE = 11,
-};
+// Structures sizes
+#define ARSENAL_SIZE 4
+#define PROJECTILE_LABEL_SIZE 4
+#define DAMAGE_MAX_SIZE 9
+#define BOARD_SIZE 10
+#define PLAYER_NAME_SIZE 11
 
 typedef struct Coord {
     int x;
