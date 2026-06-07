@@ -6,6 +6,13 @@
 
 #include "../../utils/utils.h"
 
+// Ship labels
+#define AIC 'A'  // AIRCRAFT CARRIER
+#define BSH 'B'  // BATTLESHIP
+#define SUB 'S'  // SUBMARINE
+#define DES 'D'  // DESTROYER
+#define PAB 'P'  // PATROL BOAT
+
 // Projectiles indexes
 #define GNF 0
 #define BMB 1
@@ -13,6 +20,11 @@
 #define SMN 3
 
 // Structures sizes
+#define AIC_LENGTH 5
+#define BSH_LENGTH 4
+#define SUB_LENGTH 3
+#define DES_LENGTH 3
+#define PAB_LENGTH 2
 #define GNF_DAMAGE_SIZE 1
 #define BMB_DAMAGE_SIZE 5
 #define TPD_DAMAGE_SIZE 7
@@ -36,7 +48,7 @@ const Coord DIRECTIONS[DIRECTIONS_SIZE] = {
 
 // Auxiliar structures
 typedef struct Collision {
-    int collided;
+    bool collided;
     char who;
 } Collision;
 
@@ -48,32 +60,29 @@ typedef struct ProjectilePattern {
 } ProjectilePattern;
 
 // Auxiliar functions
-int is_inside_board(Coord c) {
-    return c.x >= 0 && c.x < BOARD_SIZE && c.y >= 0 && c.y < BOARD_SIZE;
+bool is_inside_board(Coord coord) {
+    return coord.x >= 0 && coord.x < BOARD_SIZE && coord.y >= 0 && coord.y < BOARD_SIZE;
 }
 
-int is_filledout(char (*board)[BOARD_SIZE], Coord coord) {
-    if (!is_inside_board(coord)) return 1;
-
-    return board[coord.y][coord.x];
+bool is_filledout(char (*board)[BOARD_SIZE], Coord coord) {
+    return !is_inside_board(coord) || board[coord.y][coord.x] != EMPTY_LABEL;
 }
 
-Coord increment_coord(Coord coord, Coord icr, int times) {
-    coord.x += times * icr.x;
-    coord.y += times * icr.y;
-
-    return coord;
+Coord increment_coord(Coord initial, Coord direction, int displacement) {
+    initial.x += displacement * direction.x;
+    initial.y += displacement * direction.y;
+    return initial;
 }
 
-int is_anything(char (*board)[BOARD_SIZE], Coord coord, int size, int drt) {
+bool is_anything(char (*board)[BOARD_SIZE], Coord coord, int size, int drt) {
     while (size > 0) {
-        if (is_filledout(board, coord)) return 1;
+        if (is_filledout(board, coord)) return true;
 
         coord = increment_coord(coord, DIRECTIONS[drt], 1);
         size--;
     }
 
-    return 0;
+    return false;
 }
 
 int draw_random(int lim) {
@@ -83,7 +92,7 @@ int draw_random(int lim) {
 Coord gen_start_coord(int size, int drt) {
     Coord start_coord = { 0 };
 
-    while (1) {
+    while (true) {
         start_coord.x = draw_random(BOARD_SIZE);
         start_coord.y = draw_random(BOARD_SIZE);
 
@@ -108,10 +117,10 @@ void create_ship(char (*board)[BOARD_SIZE], Ship* ship, char label, int size) {
 
     ship->label = label;
     ship->size = size;
-    ship->is_sunk = 0;
-    ship->has_been_recorded = 0;
+    ship->is_sunk = false;
+    ship->has_been_recorded = false;
 
-    while (1) {
+    while (true) {
         drt = draw_random(DIRECTIONS_SIZE);
         start_coord = gen_start_coord(ship->size, drt);
 
@@ -193,13 +202,13 @@ void gen_damage(Coord* dest, int projectile_i) {
 Collision was_there_collision(char (*board)[BOARD_SIZE], Coord target) {
     char content = board[target.y][target.x];
     Collision result = {
-        .collided = 0,
+        .collided = false,
         .who = WATER_LABEL,
     };
 
     if (content == EMPTY_LABEL) return result;
 
-    result.collided = 1;
+    result.collided = true;
     result.who = content;
     return result;
 }
@@ -210,7 +219,7 @@ void update_ships_state(Ship* ships, char target_label) {
             ships[i].size--;
 
             if (!ships[i].size) {
-                ships[i].is_sunk = 1;
+                ships[i].is_sunk = true;
             }
 
             break;
@@ -278,8 +287,12 @@ void init_boards(GameState* stt) {
 void init_ships(GameState* stt) {
     srand(time(NULL));
 
-    const int lengths[SHIPS_QTY] = { 5, 4, 3, 3, 2 };
-    const char labels[SHIPS_QTY] = { 'A', 'B', 'S', 'D', 'P' };
+    const int lengths[SHIPS_QTY] = {
+        AIC_LENGTH, BSH_LENGTH, SUB_LENGTH, DES_LENGTH, PAB_LENGTH,
+    };
+    const char labels[SHIPS_QTY] = {
+        AIC, BSH, SUB, DES, PAB,
+    };
 
     for (int i = 0; i < SHIPS_QTY; i++) {
         create_ship(stt->control_board, &stt->ships[i], labels[i], lengths[i]);
@@ -287,29 +300,29 @@ void init_ships(GameState* stt) {
 }
 
 // Validation functions
-int validate_projectile(Projectile* arsenal, int i) {
+bool validate_projectile(Projectile* arsenal, int i) {
     return i >= 0 && i < ARSENAL_SIZE && arsenal[i].ammunition;
 }
 
-int validate_coord(Coord coord) {
+bool validate_coord(Coord coord) {
     return is_inside_board(coord);
 }
 
-int did_sink_all_ships(Player* player) {
+bool did_sink_all_ships(Player* player) {
     return player->score == SHIPS_QTY;
 }
 
-int did_run_out_ammunition(Player* player) {
+bool did_run_out_ammunition(Player* player) {
     return !player->ammunition_total;
 }
 
 // Modification functions
 void finish_game(GameState* stt) {
-    stt->running = 0;
+    stt->running = false;
 }
 
 void init_game_state(GameState* stt, const char* player_name) {
-    stt->running = 1;
+    stt->running = true;
     init_boards(stt);
     init_ships(stt);
     init_player_state(&stt->player, player_name);
@@ -318,14 +331,14 @@ void init_game_state(GameState* stt, const char* player_name) {
 void update_player_score(Player* player, Ship* ships) {
     for (int i = 0; i < SHIPS_QTY; i++) {
         if (!ships[i].has_been_recorded && ships[i].is_sunk) {
+            ships[i].has_been_recorded = true;
             player->score++;
-            ships[i].has_been_recorded = 1;
         }
     }
 }
 
-int fire(GameState* stt, int projectile_i, Coord coord) {
-    int success = 0;
+bool fire(GameState* stt, int projectile_i, Coord coord) {
+    bool success = false;
     Projectile* projectile = &stt->player.arsenal[projectile_i];
 
     for (int i = 0; i < projectile->damage_size; i++) {
@@ -337,7 +350,7 @@ int fire(GameState* stt, int projectile_i, Coord coord) {
 
         if (result.collided) {
             update_ships_state(stt->ships, result.who);
-            success = 1;
+            success = true;
         }
 
         fill_in(stt->draw_board, target, result.who);

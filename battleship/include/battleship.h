@@ -1,6 +1,8 @@
 #ifndef BATTLESHIP_H
 #define BATTLESHIP_H
 
+#include <stdbool.h>
+
 #define WATER_LABEL '~'
 #define EMPTY_LABEL '\0'
 
@@ -20,8 +22,8 @@ typedef struct Coord {
 
 typedef struct Ship {
     int size;
-    int is_sunk;
-    int has_been_recorded;
+    bool is_sunk;
+    bool has_been_recorded;
     char label;
 } Ship;
 
@@ -40,7 +42,7 @@ typedef struct Player {
 } Player;
 
 typedef struct GameState {
-    int running;
+    bool running;
     char control_board[BOARD_SIZE][BOARD_SIZE];
     char draw_board[BOARD_SIZE][BOARD_SIZE];
     Ship ships[SHIPS_QTY];
@@ -48,15 +50,15 @@ typedef struct GameState {
 } GameState;
 
 // Validation functions
-int validate_coord(Coord);
-int validate_projectile(Projectile*, int i);
-int did_sink_all_ships(Player*);
-int did_run_out_ammunition(Player*);
+bool validate_coord(Coord);
+bool validate_projectile(Projectile*, int i);
+bool did_sink_all_ships(Player*);
+bool did_run_out_ammunition(Player*);
 
 // Modification function
 void finish_game(GameState*);
 void init_game_state(GameState*, const char* player_name);
 void update_player_score(Player*, Ship*);
-int fire(GameState*, int projectile_i, Coord coord);
+bool fire(GameState*, int projectile_i, Coord coord);
 
 #endif  // BATTLESHIP_H

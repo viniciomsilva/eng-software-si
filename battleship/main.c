@@ -1,4 +1,3 @@
-#include <stdbool.h>
 #include <stdio.h>
 
 #include "../utils/utils.h"
@@ -6,7 +5,7 @@
 #include "battleship_io.h"
 
 void pause_game(const char* msg) {
-    printf("   > ERRO: %s \n", msg);
+    printf(msg);
     printf("     PRESSIONE QUALQUER TECLA PARA CONTINUAR...");
     getchar();
 }
@@ -27,12 +26,12 @@ int main(void) {
         render(&state);
 
         if (did_sink_all_ships(&state.player)) {
-            printf("   > GAME WINS: VOCE AFUNDOU TODOS AS EMBARCACOES... \n");
+            printf("\n   > GAME WINS: VOCE AFUNDOU TODOS AS EMBARCACOES... \n");
             break;
         }
 
         if (did_run_out_ammunition(&state.player)) {
-            printf("   > GAME OVER: VOCE GASTOU TODAS NAS MUNICOES... \n");
+            printf("\n   > GAME OVER: VOCE GASTOU TODAS NAS MUNICOES... \n");
             break;
         }
 
@@ -49,7 +48,7 @@ int main(void) {
 
             if (validate_projectile(state.player.arsenal, --option)) break;
 
-            pause_game("PROJETIL INVALIDO.");
+            pause_game("   > ERRO: PROJETIL INVALIDO. \n");
         } while (true);
 
         if (!state.running) break;
@@ -60,7 +59,7 @@ int main(void) {
 
             if (validate_coord(coord_attack)) break;
 
-            pause_game("COORDENADA INVALIDA.");
+            pause_game("   > ERRO: COORDENADA INVALIDA. \n");
         } while (true);
 
         if (fire(&state, option, coord_attack)) {
@@ -68,6 +67,6 @@ int main(void) {
         }
     } while (state.running);
 
-    printf("   > FINALIZANDO...");
+    pause_game("   > FINALIZANDO...");
     return 0;
 }
