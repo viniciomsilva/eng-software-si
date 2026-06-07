@@ -7,8 +7,8 @@
 #define BUFFER_SIZE 4
 
 // Input functions
-Coord read_coord();
 void read_player_name(char* player_name);
+Coord read_coord(void);
 
 // Output functions
 void render(GameState*);

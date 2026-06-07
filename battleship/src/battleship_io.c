@@ -99,7 +99,7 @@ void read_player_name(char* player_name) {
     snprintf(player_name, PLAYER_NAME_SIZE, "%s", buffer);
 }
 
-Coord read_coord() {
+Coord read_coord(void) {
     char buffer[BUFFER_SIZE];
     Coord coord = { .x = -1, .y = -1 };
 
