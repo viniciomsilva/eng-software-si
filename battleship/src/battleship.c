@@ -54,6 +54,12 @@ typedef struct Collision {
     char who;
 } Collision;
 
+typedef struct Path {
+    Coord initial;
+    Coord direction;
+    int displacement;
+} Path;
+
 typedef struct ShipPattern {
     int length;
     char label;
@@ -75,57 +81,63 @@ bool is_filledout(char (*board)[BOARD_SIZE], Coord coord) {
     return !is_inside_board(coord) || board[coord.y][coord.x] != EMPTY_LABEL;
 }
 
-Coord increment_coord(Coord initial, Coord direction, int displacement) {
-    initial.x += displacement * direction.x;
-    initial.y += displacement * direction.y;
-    return initial;
-}
-
 void decrement_ammunition(int* projetil_ammunition, int* player_total_ammunition) {
     *projetil_ammunition -= 1;
     *player_total_ammunition -= 1;
 }
 
-bool is_anything(char (*board)[BOARD_SIZE], Coord coord, int size, int drt) {
-    while (size > 0) {
-        if (is_filledout(board, coord)) return true;
+int draw_random(int limit) {
+    return rand() % limit;
+}
 
-        coord = increment_coord(coord, DIRECTIONS[drt], 1);
-        size--;
+Coord increment_coord(Path path) {
+    Coord coord = { 0 };
+
+    coord.x = path.initial.x + path.direction.x * path.displacement;
+    coord.y = path.initial.y + path.direction.y * path.displacement;
+
+    return coord;
+}
+
+Coord gen_start_coord(Path path, int length) {
+    path.displacement = --length;
+
+    while (true) {
+        path.initial.x = draw_random(BOARD_SIZE);
+        path.initial.y = draw_random(BOARD_SIZE);
+
+        Coord last_coord = increment_coord(path);
+
+        if (is_inside_board(last_coord)) break;
+    }
+
+    return path.initial;
+}
+
+bool is_anything(char (*board)[BOARD_SIZE], Path path, int length) {
+    path.displacement = 1;
+
+    while (length > 0) {
+        if (is_filledout(board, path.initial)) return true;
+
+        path.initial = increment_coord(path);
+        length--;
     }
 
     return false;
 }
 
-int draw_random(int lim) {
-    return rand() % lim;
-}
+void place_on_board(char (*board)[BOARD_SIZE], Ship* ship, Path path) {
+    path.displacement = 1;
 
-Coord gen_start_coord(int size, int drt) {
-    Coord start_coord = { 0 };
-
-    while (true) {
-        start_coord.x = draw_random(BOARD_SIZE);
-        start_coord.y = draw_random(BOARD_SIZE);
-
-        Coord last_coord = increment_coord(start_coord, DIRECTIONS[drt], (size - 1));
-
-        if (is_inside_board(last_coord)) break;
-    }
-
-    return start_coord;
-}
-
-void place_on_board(char (*board)[BOARD_SIZE], Ship* ship, Coord coord, int drt) {
     for (int i = 0; i < ship->length; i++) {
-        board[coord.y][coord.x] = ship->label;
-        coord = increment_coord(coord, DIRECTIONS[drt], 1);
+        board[path.initial.y][path.initial.x] = ship->label;
+        path.initial = increment_coord(path);
     }
 }
 
 void create_ship(char (*board)[BOARD_SIZE], Ship* ship, ShipPattern pattern) {
-    int drt = 0;
-    Coord start_coord = { 0 };
+    Path path = { 0 };
 
     ship->label = pattern.label;
     ship->length = pattern.length;
@@ -133,15 +145,15 @@ void create_ship(char (*board)[BOARD_SIZE], Ship* ship, ShipPattern pattern) {
     ship->has_been_recorded = false;
 
     while (true) {
-        drt = draw_random(DIRECTIONS_SIZE);
-        start_coord = gen_start_coord(pattern.length, drt);
+        path.direction = DIRECTIONS[draw_random(DIRECTIONS_SIZE)];
+        path.initial = gen_start_coord(path, pattern.length);
 
-        if (is_anything(board, start_coord, pattern.length, drt)) continue;
+        if (is_anything(board, path, pattern.length)) continue;
 
         break;
     }
 
-    place_on_board(board, ship, start_coord, drt);
+    place_on_board(board, ship, path);
 }
 
 void create_projectile(Projectile* projectile, ProjectilePattern pattern) {
@@ -357,9 +369,14 @@ void update_player_score(Player* player, Ship* ships) {
 bool fire(GameState* state, int projectile_i, Coord coord) {
     bool success = false;
     Projectile* projectile = &state->player.arsenal[projectile_i];
+    Path path = {
+        .initial = coord,
+        .displacement = 1,
+    };
 
     for (int i = 0; i < projectile->damage_size; i++) {
-        Coord target = increment_coord(coord, projectile->damage[i], 1);
+        path.direction = projectile->damage[i];
+        Coord target = increment_coord(path);
 
         if (is_filledout(state->draw_board, target)) continue;
 
