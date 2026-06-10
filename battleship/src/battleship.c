@@ -278,6 +278,7 @@ void init_player_state(Player* player, const char* name) {
     strncpy(player->name, name, PLAYER_NAME_REAL_SIZE);
     player->name[PLAYER_NAME_REAL_SIZE] = EMPTY_LABEL;
     player->score = 0;
+    player->wins = false;
     player->ammunition_total = sum(ammunition, ARSENAL_SIZE);
 
     for (int i = 0; i < ARSENAL_SIZE; i++) {
@@ -364,6 +365,29 @@ void update_player_score(Player* player, Ship* ships) {
             player->score++;
         }
     }
+}
+
+void open_all_draw_board(GameState* state) {
+    char (*control_board)[BOARD_SIZE] = state->control_board;
+    char (*draw_board)[BOARD_SIZE] = state->draw_board;
+
+    for (int y = 0; y < BOARD_SIZE; y++) {
+        for (int x = 0; x < BOARD_SIZE; x++) {
+            Coord coord = {
+                .x = x,
+                .y = y,
+            };
+
+            if (is_filledout(draw_board, coord)) continue;
+            if (control_board[y][x] == EMPTY_LABEL) continue;
+
+            fill_in(draw_board, coord, control_board[y][x]);
+        }
+    }
+}
+
+void set_player_wins(Player* player) {
+    player->wins = true;
 }
 
 bool fire(GameState* state, int projectile_i, Coord coord) {

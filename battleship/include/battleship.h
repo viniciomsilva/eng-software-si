@@ -37,6 +37,7 @@ typedef struct Projectile {
 typedef struct Player {
     int ammunition_total;
     int score;
+    bool wins;
     char name[PLAYER_NAME_SIZE];
     Projectile arsenal[ARSENAL_SIZE];
 } Player;
@@ -59,6 +60,8 @@ bool did_run_out_ammunition(Player* player);
 void finish_game(GameState* state);
 void init_game_state(GameState* state, const char* player_name);
 void update_player_score(Player* player, Ship* ships);
+void open_all_draw_board(GameState* state);
+void set_player_wins(Player* player);
 bool fire(GameState* state, int projectile_i, Coord coord);
 
 #endif  // BATTLESHIP_H

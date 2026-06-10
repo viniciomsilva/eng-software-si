@@ -26,12 +26,12 @@ int main(void) {
         render(&state);
 
         if (did_sink_all_ships(&state.player)) {
-            printf("\n   > GAME WINS: VOCE AFUNDOU TODOS AS EMBARCACOES... \n");
+            set_player_wins(&state.player);
             break;
         }
 
         if (did_run_out_ammunition(&state.player)) {
-            printf("\n   > GAME OVER: VOCE GASTOU TODAS NAS MUNICOES... \n");
+            open_all_draw_board(&state);
             break;
         }
 
@@ -66,6 +66,14 @@ int main(void) {
             update_player_score(&state.player, state.ships);
         }
     } while (state.running);
+
+    if (state.player.wins) {
+        printf("\n   > GAME WINS: VOCE AFUNDOU TODOS AS EMBARCACOES... \n");
+    } else {
+        clear();
+        render(&state);
+        printf("\n   > GAME OVER: VOCE GASTOU TODAS NAS MUNICOES... \n");
+    }
 
     pause_game("   > FINALIZANDO... \n");
     return 0;
