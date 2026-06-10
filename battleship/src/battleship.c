@@ -33,8 +33,8 @@
 #define SMN_DAMAGE_SIZE 9
 
 // Projectiles ammunition
-#define GNF_AMMUNITION 25
-#define BMB_AMMUNITION 4
+#define GNF_AMMUNITION 20
+#define BMB_AMMUNITION 3
 #define TPD_AMMUNITION 4
 #define SMN_AMMUNITION 3
 
