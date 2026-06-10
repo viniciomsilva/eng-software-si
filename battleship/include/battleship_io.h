@@ -7,10 +7,10 @@
 #define BUFFER_SIZE 4
 
 // Input functions
-void read_player_name(char* player_name);
-Coord read_coord(void);
+void io_read_player_name(char* player_name);
+Coord io_read_coord(void);
 
 // Output functions
-void render(GameState* state);
+void io_render(GameState* state);
 
 #endif  // BATTLESHIP_IO_H

@@ -91,7 +91,7 @@ void draw_lines(char (*board)[BOARD_SIZE], Projectile* arsenal) {
 }
 
 // Input functions
-void read_player_name(char* player_name) {
+void io_read_player_name(char* player_name) {
     char buffer[PLAYER_NAME_SIZE];
 
     read_str(buffer, sizeof(buffer));
@@ -99,7 +99,7 @@ void read_player_name(char* player_name) {
     snprintf(player_name, PLAYER_NAME_SIZE, "%s", buffer);
 }
 
-Coord read_coord(void) {
+Coord io_read_coord(void) {
     char buffer[BUFFER_SIZE];
     Coord coord = { .x = -1, .y = -1 };
 
@@ -107,11 +107,8 @@ Coord read_coord(void) {
     transform_to_upper(buffer);
 
     if (buffer[0] == EMPTY_LABEL) return coord;
-
     if (buffer[0] < COLUMNS[0] || buffer[0] > COLUMNS[BOARD_REAL_SIZE]) return coord;
-
     if (!isdigit(buffer[1])) return coord;
-
     if (buffer[2] != EMPTY_LABEL && !isdigit(buffer[2])) return coord;
 
     coord.x = buffer[0] - COLUMNS[0];
@@ -120,7 +117,7 @@ Coord read_coord(void) {
 }
 
 // Output functions
-void render(GameState* state) {
+void io_render(GameState* state) {
     char (*board)[BOARD_SIZE] = state->draw_board;
     Projectile* arsenal = state->player.arsenal;
 

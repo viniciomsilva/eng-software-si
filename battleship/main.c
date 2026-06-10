@@ -17,13 +17,13 @@ int main(void) {
     GameState state;
 
     printf("\n  > DIGITE SEU NOME [ MAX: %d LETRAS ]: ", (PLAYER_NAME_SIZE - 1));
-    read_player_name(player_name);
+    io_read_player_name(player_name);
 
     init_game_state(&state, player_name);
 
     do {
         clear();
-        render(&state);
+        io_render(&state);
 
         if (did_sink_all_ships(&state.player)) {
             set_player_wins(&state.player);
@@ -55,7 +55,7 @@ int main(void) {
 
         do {
             printf("   > COORDENADA: ");
-            coord_attack = read_coord();
+            coord_attack = io_read_coord();
 
             if (validate_coord(coord_attack)) break;
 
@@ -71,7 +71,7 @@ int main(void) {
         printf("\n   > GAME WINS: VOCE AFUNDOU TODOS AS EMBARCACOES... \n");
     } else {
         clear();
-        render(&state);
+        io_render(&state);
         printf("\n   > GAME OVER: VOCE GASTOU TODAS NAS MUNICOES... \n");
     }
 
