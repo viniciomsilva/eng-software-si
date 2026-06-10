@@ -296,13 +296,13 @@ void init_player_state(Player* player, const char* name) {
 }
 
 void init_boards(GameState* state) {
-    Coord coord = { 0 };
-
     for (int y = 0; y < BOARD_SIZE; y++) {
-        coord.y = y;
-
         for (int x = 0; x < BOARD_SIZE; x++) {
-            coord.x = x;
+            Coord coord = {
+                .x = x,
+                .y = y,
+            };
+
             fill_in(state->control_board, coord, EMPTY_LABEL);
             fill_in(state->draw_board, coord, EMPTY_LABEL);
         }
