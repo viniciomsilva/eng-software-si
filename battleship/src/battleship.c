@@ -55,7 +55,7 @@ typedef struct Collision {
 } Collision;
 
 typedef struct Path {
-    Coord initial;
+    Coord source;
     Coord direction;
     int displacement;
 } Path;
@@ -91,36 +91,33 @@ int draw_random(int limit) {
 }
 
 Coord increment_coord(Path path) {
-    Coord coord = { 0 };
-
-    coord.x = path.initial.x + path.direction.x * path.displacement;
-    coord.y = path.initial.y + path.direction.y * path.displacement;
-
-    return coord;
+    path.source.x += path.direction.x * path.displacement;
+    path.source.y += path.direction.y * path.displacement;
+    return path.source;
 }
 
 Coord gen_start_coord(Path path, int length) {
     path.displacement = --length;
 
     while (true) {
-        path.initial.x = draw_random(BOARD_SIZE);
-        path.initial.y = draw_random(BOARD_SIZE);
+        path.source.x = draw_random(BOARD_SIZE);
+        path.source.y = draw_random(BOARD_SIZE);
 
         Coord last_coord = increment_coord(path);
 
         if (is_inside_board(last_coord)) break;
     }
 
-    return path.initial;
+    return path.source;
 }
 
 bool is_anything(char (*board)[BOARD_SIZE], Path path, int length) {
     path.displacement = 1;
 
     while (length > 0) {
-        if (is_filledout(board, path.initial)) return true;
+        if (is_filledout(board, path.source)) return true;
 
-        path.initial = increment_coord(path);
+        path.source = increment_coord(path);
         length--;
     }
 
@@ -131,8 +128,8 @@ void place_on_board(char (*board)[BOARD_SIZE], Ship* ship, Path path) {
     path.displacement = 1;
 
     for (int i = 0; i < ship->length; i++) {
-        board[path.initial.y][path.initial.x] = ship->label;
-        path.initial = increment_coord(path);
+        board[path.source.y][path.source.x] = ship->label;
+        path.source = increment_coord(path);
     }
 }
 
@@ -146,7 +143,7 @@ void create_ship(char (*board)[BOARD_SIZE], Ship* ship, ShipPattern pattern) {
 
     while (true) {
         path.direction = DIRECTIONS[draw_random(DIRECTIONS_SIZE)];
-        path.initial = gen_start_coord(path, pattern.length);
+        path.source = gen_start_coord(path, pattern.length);
 
         if (is_anything(board, path, pattern.length)) continue;
 
@@ -394,7 +391,7 @@ bool fire(GameState* state, int projectile_i, Coord coord) {
     bool success = false;
     Projectile* projectile = &state->player.arsenal[projectile_i];
     Path path = {
-        .initial = coord,
+        .source = coord,
         .displacement = 1,
     };
 
