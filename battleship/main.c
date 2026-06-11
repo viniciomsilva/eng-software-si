@@ -4,6 +4,8 @@
 #include "battleship.h"
 #include "battleship_io.h"
 
+#define PLAYER_NAME_REAL_SIZE (PLAYER_NAME_SIZE - 1)
+
 void pause_game(const char* msg) {
     printf(msg);
     printf("     PRESSIONE QUALQUER TECLA PARA CONTINUAR...");
@@ -16,7 +18,7 @@ int main(void) {
     Coord coord_attack;
     GameState state;
 
-    printf("\n  > DIGITE SEU NOME [ MAX: %d LETRAS ]: ", (PLAYER_NAME_SIZE - 1));
+    printf("\n  > DIGITE SEU NOME [ MAX: %d LETRAS ]: ", PLAYER_NAME_REAL_SIZE);
     io_read_player_name(player_name);
 
     init_game_state(&state, player_name);
