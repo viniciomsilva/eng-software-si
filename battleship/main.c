@@ -67,12 +67,14 @@ int main(void) {
         }
     } while (state.running);
 
-    if (state.player.wins) {
-        printf("\n   > GAME WINS: VOCE AFUNDOU TODOS AS EMBARCACOES... \n");
-    } else {
-        clear();
-        io_render(&state);
-        printf("\n   > GAME OVER: VOCE GASTOU TODAS NAS MUNICOES... \n");
+    if (state.running) {
+        if (state.player.wins) {
+            printf("\n   > GAME WINS: VOCE AFUNDOU TODOS AS EMBARCACOES... \n");
+        } else {
+            clear();
+            io_render(&state);
+            printf("\n   > GAME OVER: VOCE GASTOU TODAS NAS MUNICOES... \n");
+        }
     }
 
     pause_game("   > FINALIZANDO... \n");
