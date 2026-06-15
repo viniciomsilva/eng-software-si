@@ -68,9 +68,7 @@ long read_long(int buffer_size, const char* err) {
         read_str(buffer, sizeof(buffer));
 
         // If the input is empty, continues the loop to read again.
-        if (!buffer) continue;
-
-        buffer[strcspn(buffer, "\n")] = '\0';
+        if (buffer[0] == '\0') continue;
 
         // Convert the input string value to a base-10 number.
         // strtol will traverse the buffer searching for a number.
