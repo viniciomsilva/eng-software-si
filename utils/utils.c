@@ -20,6 +20,7 @@
  * @brief Defines the console clear command based on the OS.
  * - Windows (_WIN32) uses "cls"
  * - Linux/macOS uses "clear"
+ *
  */
 #ifdef _WIN32
 #define CLS_CMD "cls"
@@ -30,6 +31,7 @@
 /**
  * @brief Clears remaining characters in the standard input buffer, consuming each
  * character until '\\n' and EOF is encountered.
+ *
  */
 void clean_buffer(void) {
     int c;
