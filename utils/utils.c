@@ -80,7 +80,7 @@ long read_long(int buffer_size, const char* err) {
         // if the last evaluated character is not '\0',
         // it means there are non-numeric characters in the input.
         if (buffer[0] == '\0' || *endptr != '\0') {
-            printf(err);
+            printf("%s", err);
             continue;
         }
 
