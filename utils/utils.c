@@ -29,8 +29,8 @@
 #endif  // _WIN32
 
 /**
- * @brief Clears remaining characters in the standard input buffer, consuming each
- * character until '\\n' and EOF is encountered.
+ * @brief Clears remaining characters in the standard input buffer, consuming
+ * each character until '\\n' and EOF is encountered.
  *
  */
 void clean_buffer(void) {
