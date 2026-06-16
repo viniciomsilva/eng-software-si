@@ -4,6 +4,8 @@
 > **Aluno:** Vinicio Monteiro\
 > **Disciplina:** Introdução à Programação de Computadores
 
+Leia em: [🇺🇸 English](./README_EN.md)
+
 Repositório com os códigos dos projetos da disciplina de **Introdução à**
 **Programação de Computadores** do primeiro semestre da faculdade de
 **Engenharia de Software**, na **Estácio**. Os projetos são jogos simples
@@ -14,60 +16,30 @@ Este repositório existe para medir minha evolução em construção de algoritm
 arquitetura de software, design e boas práticas. Ou seja, para servir de
 histórico para avaliação futura da minha evolução.
 
----
+## 📑 Ordem de Desenvolvimento dos Projetos
 
-*EN:* Repository containing the project code for the **Introduction to**
-**Computer Programming** course during the first semester of the **Software**
-**Engineering** degree at **Estácio**. The projects are simple games developed
-in C, aiming to assimilate basic concepts of algorithms, data manipulation, and
-computing resources.
+1. 🃏 [Super Trunfo](./super_trumps/);
+2. ♟️ [Movimentação do Xadrez](./chess_move/);
+3. ⚓ [Batalha Naval](./battleship/).
 
-This repository exists to track my progress in algorithm construction, software
-architecture, design, and best practices. In other words, it serves as a
-historical record for future evaluation of my evolution.
+Cada jogo é um diretório separado. Para cada respectivo diretório, há um script
+`.bat` para Windows ou `.sh` para Linux/macOS com o comando de compilação e
+execução daquele jogo mandando o executável para `../bin/`.
 
-## 📑 Ordem de Desenvolvimento dos Projetos | Project Development Order
-
-1. 🃏 [Super Trumps](./super_trumps/);
-2. ♟️ [Chess Move](./chess_move/);
-3. ⚓ [Battleship](./battleship/).
-
-Cada jogo é um diretório separado. Para cada respectivo diretório, há um
-*script* `.bat` para Windows ou `.sh` para Linux/macOS com o comando de
-compilação e execução daquele jogo mandando o executável para `../bin/`.
-
----
-
-*EN:* Each game is in a separate directory. For each respective directory,
-there is a `.bat` script for Windows or a `.sh` script for Linux/macOS
-containing the compilation and execution commands for that game, sending the
-executable to `../bin/`.
-
-## 🚀 Introdução | Introduction
+## 🚀 Introdução
 
 Para a compilação dos jogos, basta instalar o compilador **GCC** do **pacote**
 **MinGW** no Windows. Caso use Linux/macOS, o GCC vem instalado por padrão.
 E um editor de código simples, recomendo o uso do **VSCode** com o pacote de
-extensões para C/C++. Vide os *links*:
-
----
-
-*EN:* To compile the games, simply install the **GCC** compiler from the
-**MinGW package** on Windows. If you use Linux/macOS, GCC is installed by
-default. As for a simple code editor, I recommend using **VSCode** with the
-C/C++ extension pack. See the links below:
+extensões para C/C++. Vide os links:
 
 * [Install VSCode](https://code.visualstudio.com/docs/getstarted/overview?os=windows#_install-vs-code);
 * [Windows: Using GCC with MinGW](https://code.visualstudio.com/docs/cpp/config-mingw);
 * [Linux/macOS: Using GCC with VSCode](https://code.visualstudio.com/docs/cpp/config-linux).
 
-### Compilação e Execução | Compilation and Execution
+### Compilação e Execução
 
 Opção \#1 para download: baixar o arquivo ZIP.
-
----
-
-*EN:* Download Option \#1: Download the ZIP file.
 
 <div align="center">
   <img src="./assets/download_zip.png" alt="GitHub's “Download ZIP” button" width="500" />
@@ -75,23 +47,13 @@ Opção \#1 para download: baixar o arquivo ZIP.
 
 Opção \#2 para download: clonar o repositório com Git.
 
----
-
-*EN:* Download Option \#2: Clone the repository using Git.
-
 ```sh
 git clone https://github.com/viniciomsilva/eng-software-si.git your_directory
 ```
 
 Após baixar o código para sua máquina, entre na pasta de um dos projetos e
-execute o *script* `compile.bat` para compilar e executar automaticamente no
-Windows ou o *script* `compile.sh` para Linux/macOS.
-
----
-
-*EN:* After downloading the code to your machine, navigate to one of the project
-folders and run the `compile.bat` script to automatically compile and run on
-Windows, or the `compile.sh` script for Linux/macOS.
+execute o script `compile.bat` para compilar e executar automaticamente no
+Windows ou o script `compile.sh` para Linux/macOS.
 
 ```sh
 # Linux/macOS Bash
@@ -113,32 +75,22 @@ compile.bat
 
 ## 📑 Sobre os Projetos
 
-* 🃏 [Super Trunfo | Super Trumps](#-super-trunfo--super-trumps);
-* ♟️ [Movimentação do Xadrez | Chess Move](#️-movimentação-do-xadrez--chess-move);
-* ⚓ [Batalha Naval | Battleships](#-batalha-naval--battleship);
-* 🛠️ [Componente Utils | Utils Components](#️-componente-utils--utils-component).
+* 🃏 [Super Trunfo](#-super-trunfo);
+* ♟️ [Movimentação do Xadrez](#️-movimentação-do-xadrez);
+* ⚓ [Batalha Naval](#-batalha-naval);
+* 🛠️ [Componente Utils](#️-componente-utils).
 
-### 🃏 Super Trunfo | Super Trumps
+### 🃏 Super Trunfo
 
 Jogo simples onde o jogador informa os atributos de duas cartas do tema cidades.
 A carta com os maiores atributos ganha, exceto o atributo de densidade
 populacional.
 
 O objetivo principal desse projeto é aprender os tipos primitivos, os operadores
- aritméticos e relacionais, estrutura de dados, estruturas de repetição,
- vetores, funções básicas, entradas e saídas de dados.
+aritméticos e relacionais, estrutura de dados, estruturas de repetição,
+vetores, funções básicas, entradas e saídas de dados.
 
----
-
-*EN:* A simple game where the player inputs the attributes of two city-themed
-cards. The card with the higher attributes wins, except for the population
-density attribute.
-
-The main objective of this project is to learn primitive types, arithmetic and
-relational operators, data structures, loops (repetition structures), arrays,
-basic functions, and data input/output (I/O).
-
-### ♟️ Movimentação do Xadrez | Chess Move
+### ♟️ Movimentação do Xadrez
 
 Jogo que mostra um tabuleiro de xadrez padrão (8x8) onde o jogador escolhe uma
 peça e a movimenta seguindo as regras clássicas e básicas do xadrez.
@@ -157,26 +109,6 @@ Outro ponto de destaque neste projeto é a lógica para incrementar ou decrement
 as coordenadas das peças para movimentá-las no tabuleiro.  Essa lógica é
 facilitada com auxílio de vetores de estruturas com valores para `x` e `y`
 simulando a movimentação seguindo os pontos cardeais.
-
----
-
-*EN:* A game that displays a standard chess board (8x8) where the player chooses
-a piece and moves it according to classical and basic chess rules.
-
-*Note: There is no combat between players or against the machine.*
-
-This project involves manipulating a two-dimensional array (taking care to
-prevent buffer overflows), piece collision detection, and input validation,
-adhering to the game's business rules. It already demonstrates a basic
-separation of concerns into modules and a brief introduction to pointers.
-
-* `chess_move.h`: centralizes the business rules;
-* `chess_move_io.h`: handles the formatting of data input and output.
-
-Another highlight of this project is the logic used to increment or decrement
-piece coordinates to move them across the board. This logic is streamlined with
-the help of arrays of structs containing `x` and `y` values, simulating movement
-along the cardinal points.
 
 ```c
 // chess_move.h
@@ -205,15 +137,6 @@ a representação numa manipulação de matrizes. Veja:
 * O valor `y` cresce de cima para baixo;
 * Para acessar uma posição, `y` vem antes do `x`.
 
----
-
-*EN:* Just like in a standard Cartesian plane, `x` represents the row and `y`
-represents the column. However, there are notable discrepancies between the
-Cartesian representation and matrix manipulation. See below:
-
-* The `y` value increases from top to bottom;
-* To access a position, `y` comes before `x`.
-
 ```c
 int matrix[3][3] = {
   { 0, 1, 2 },
@@ -227,7 +150,7 @@ int y = 2;
 printf("%d", matrix[y][x]);  // -> 8
 ```
 
-#### Interface: Movimentação do Xadrez | Chess Move
+#### Interface: Movimentação do Xadrez
 
 ```txt
   MOVIMENTACAO DO XADREZ 
@@ -258,7 +181,7 @@ printf("%d", matrix[y][x]);  // -> 8
   > QUANTIDADE DE CASAS: 2
 ```
 
-### ⚓ Batalha Naval | Battleship
+### ⚓ Batalha Naval
 
 Jogo de Batalha Naval simples onde o jogador terá de afundar as embarcações
 posicionadas oculta e aleatoriamente pelo computador.
@@ -288,37 +211,6 @@ do tabuleiro, ele perde boa parte do dano potencial daquele projétil. O arsenal
 * Torpedo com área de dano em formato de sinal de adição maior nas laterais,
   atinge até 7 posições;
 * Mina marítima com área de dano em formato de triângulo, atinge até 9 posições.
-
----
-
-*EN:* A simple Battleship game where the player must sink ships placed hidden
-and randomly by the computer.
-
-Much of the logic for incrementing and decrementing coordinate structures within
-matrices was reused, adapted, and improved from the previous game.
-
-In this project, the computer places ships of various sizes horizontally,
-vertically, or diagonally without overlap. The choice of direction and
-coordinates is randomly determined at the start of execution, ensuring a dynamic
-game. The ships are:
-
-* Aircraft carrier with a width of 5 positions;
-* Battleship with a width of 4 positions;
-* Submarine and destroyer, both with a width of 3 positions;
-* Patrol boat with a width of 2 positions.
-
-The player has a limited arsenal of projectiles with area-of-effect (AoE)
-damage, with the exception of the standard shot. The projectile damage spreads
-outward from the center. The only rule for the player is that the center of a
-projectile cannot be launched outside the board. If an AoE projectile is
-launched too close to the edges of the board, much of its potential damage area
-is lost. The arsenal consists of:
-
-* Shot with single-target damage;
-* Bomb with a plus-sign (+) shaped damage area, hitting up to 5 positions;
-* Torpedo with a larger plus-sign shaped damage area on the sides, hitting up to
-  7 positions;
-* Sea mine with a triangle-shaped damage area, hitting up to 9 positions.
 
 ```txt
   GUNFIRE       ~
@@ -355,23 +247,7 @@ limitado.
 O jogador ganha se afundar todas as embarcações completamente antes do arsenal
 esgotar.
 
----
-
-*EN:* The player starts with an arsenal of:
-
-* 20 shots;
-* 3 bombs;
-* 4 torpedos;
-* 3 sea mines;
-
-The board measures 10x10, totaling 100 positions; the ships occupy 17 random
-positions; the projectiles, if used efficiently without wasting area, can cover
-up to 90 positions. This numerical combination brings an interesting balance to
-the challenge of sinking all ships with a limited arsenal.
-
-The player wins by completely sinking all ships before the arsenal runs out.
-
-#### Interface: Batalha Naval | Battleship
+#### Interface: Batalha Naval
 
 ```txt
     |  A  |  B  |  C  |  D  |  E  |  F  |  G  |  H  |  I  |  J  |  > PLAYER 5PT
@@ -402,31 +278,17 @@ The player wins by completely sinking all ships before the arsenal runs out.
       PRESSIONE QUALQUER TECLA PARA CONTINUAR...
 ```
 
-### 🛠️ Componente Utils | Utils Component
+### 🛠️ Componente Utils
 
 Componente com funções genéricas compartilhadas entre os projetos da
 Movimentação do Xadrez e a Batalha Naval que não estão diretamente ligadas às
 regras de negócio.
 
----
-
-*EN:* A component with generic functions shared between the Chess Move and
-Battleship projects that are not directly tied to the business rules.
-
-## 🤝 Contribuição | Contribution
+## 🤝 Contribuição
 
 Este código está sob licença MIT. No entanto, devido aos fins de manter o
 histórico e análise posterior da minha evolução acadêmica na engenharia de
 software, toda e qualquer sugestão de melhoria via *Pull Request* será
 **recusada**. Caso queira estudar, melhorar ou implementar novas
-funcionalidades, você tem total liberdade para fazer um *fork* deste
-repositório e estender o projeto em sua conta.
-
----
-
-*EN:* This code is under the MIT license. However, for the purpose of
-maintaining a historical record and enabling subsequent analysis of my academic
-progress in software engineering, any and all optimization suggestions via
-*Pull Requests* will be **declined**. If you wish to study, improve, or
-implement new features, you are entirely free to *fork* this repository and
-extend the project under your own account.
+funcionalidades, você tem total liberdade para fazer um fork deste repositório
+e estender o projeto em sua conta.
