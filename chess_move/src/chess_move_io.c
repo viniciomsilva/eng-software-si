@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "../../utils/utils.h"
 #include "chess_move.h"
 
 // Auxiliar function
@@ -11,7 +12,7 @@ void set_direction(short* di, short start, short end) {
     do {
         printf("\n> ESCOLHA UMA DIRECAO: ");
 
-        *di = (short)input_long();
+        *di = (short)read_long(BUFFER_SIZE, "  DIGITE UM NUMERO: ");
     } while (*di < start || *di > end);
 }
 
@@ -57,32 +58,10 @@ void print_pieces_menu(State* stt) {
 }
 
 // Input functions
-long input_long() {
-    long value;
-    char buffer[BUFFER_SIZE];
-    char* endptr;
-
-    while (1) {
-        if (!fgets(buffer, sizeof(buffer), stdin)) continue;
-
-        buffer[strcspn(buffer, "\n")] = '\0';
-        value = strtol(buffer, &endptr, 10);
-
-        if (buffer[0] == '\0' || *endptr != '\0') {
-            printf("  DIGITE UM NUMERO: ");
-            continue;
-        }
-
-        break;
-    }
-
-    return value;
-}
-
 void set_distance(short* dist) {
     printf("> QUANTIDADE DE CASAS: ");
 
-    *dist = (short)input_long();
+    *dist = (short)read_long(BUFFER_SIZE, "  DIGITE UM NUMERO: ");
 }
 
 void set_direction_x_or_y(short* di) {

@@ -19,7 +19,7 @@ int main(void) {
         draw_chessboard(&stt);
         print_pieces_menu(&stt);
 
-        choice = (short)input_long();
+        choice = (short)read_long(BUFFER_SIZE, "  DIGITE UM NUMERO: ");
 
         if (choice == EXIT_GAME) break;
 

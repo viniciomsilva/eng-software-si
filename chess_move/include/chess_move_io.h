@@ -11,7 +11,6 @@ void draw_chessboard(State* stt);
 void print_pieces_menu(State* stt);
 
 // Input functions
-long input_long();
 void set_distance(short* dist);
 void set_direction_x_or_y(short* di);
 void set_direction_x_and_y(short* di);
