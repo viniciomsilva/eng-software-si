@@ -6,14 +6,14 @@
 #include "chess_move_io.h"
 
 Direction DRTS[8] = {
-    { .x = 0,  .y = -1 },  // N
-    { .x = 0,  .y = 1  },  // S
-    { .x = 1,  .y = 0  },  // E
-    { .x = -1, .y = 0  },  // W
-    { .x = 1,  .y = -1 },  // NE
+    { .x = 0, .y = -1 },   // N
+    { .x = 0, .y = 1 },    // S
+    { .x = 1, .y = 0 },    // E
+    { .x = -1, .y = 0 },   // W
+    { .x = 1, .y = -1 },   // NE
     { .x = -1, .y = -1 },  // NW
-    { .x = -1, .y = 1  },  // SE
-    { .x = 1,  .y = 1  },  // SW
+    { .x = -1, .y = 1 },   // SE
+    { .x = 1, .y = 1 },    // SW
 };
 
 // Verification functions
@@ -37,6 +37,15 @@ short is_path_clear(State* stt, short pi, short di, short dist) {
     }
 
     return 1;
+}
+
+void set_square_empty(State* stt, short x, short y) {
+    stt->chessboard[y][x] = NULL;
+}
+
+void update_piece(Piece* pc, short x, short y) {
+    pc->x = x;
+    pc->y = y;
 }
 
 // Validation functions
@@ -122,16 +131,6 @@ void refresh_chessboard(State* stt) {
     }
 }
 
-void update_piece(Piece* pc, short x, short y) {
-    pc->x = x;
-    pc->y = y;
-}
-
-void set_square_empty(State* stt, short x, short y) {
-    stt->chessboard[y][x] = NULL;
-}
-
-// Flow control function
 short process_piece_turn(State* stt, short pi) {
     if (pi >= PA_START && pi <= PA_END) {
         return move_piece(stt, pi, N, 1);
