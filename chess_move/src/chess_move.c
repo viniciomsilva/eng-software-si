@@ -1,9 +1,21 @@
+/**
+ * @file chess_move.c
+ * @author Vinicio Monteiro (viniciomsilva@outlook.com.br)
+ * @brief Implementação das funções de manipulação e controle de estado, regras de negócio e fluxo de jogo.
+ * @version 0.1
+ *
+ * @copyright Copyright (c) 2026 Vinicio Monteiro.
+ *
+ */
+
 #include "chess_move.h"
 
 #include <stdio.h>
 #include <string.h>
 
 #include "chess_move_io.h"
+
+#define MAX_DISTANCE 5
 
 Direction DRTS[8] = {
     { .x = 0, .y = -1 },   // N
@@ -89,7 +101,6 @@ short move_knight(State* stt, short pi, short fdi, short sdi) {
     return 0;
 }
 
-// Modification functions
 void init_chessboard(State* stt) {
     for (short y = 0; y < CB_LEN; y++) {
         for (short x = 0; x < CB_LEN; x++) {
