@@ -72,8 +72,8 @@ typedef struct Direction {
  *
  */
 typedef struct Piece {
-    short x; /**< Position in the matrix row. X-axis. */
-    short y; /**< Position in the matrix column. Y-axis. */
+    short x;       /**< Position in the matrix row. X-axis. */
+    short y;       /**< Position in the matrix column. Y-axis. */
     char label[4]; /**< Piece's label. Ex.: King => KNG */
 } Piece;
 
