@@ -1,3 +1,12 @@
+/**
+ * @file main.c
+ * @author Vinicio Monteiro (viniciomsilva@outlook.com.br)
+ * @brief Main game file (chess move).
+ * @version 0.1
+ *
+ * @copyright Copyright (c) 2026 Vinicio Monteiro
+ *
+ */
 #include <stdio.h>
 
 #include "../utils/utils.h"
