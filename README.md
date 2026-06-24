@@ -62,7 +62,7 @@ cd your_directory/battleship
 
 chmod +x compile.sh
 
-compile.sh
+./compile.sh
 ```
 
 ```bat
