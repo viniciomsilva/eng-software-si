@@ -38,8 +38,8 @@ const Direction DRTS[DRTS_LEN] = {
     { .x = -1, .y =  0 }, /**< West. Decrements on the x-axis. */
     { .x =  1, .y = -1 }, /**< Northeast. Increments on the x-axis and decrements on the y-axis. */
     { .x = -1, .y = -1 }, /**< Northwest. Decrements on the both axes. */
-    { .x = -1, .y =  1 }, /**< Southwest. Decrements on the x-axis and increments on the y-axis. */
     { .x =  1, .y =  1 }, /**< Southeast. Increments on both axes. */
+    { .x = -1, .y =  1 }, /**< Southwest. Decrements on the x-axis and increments on the y-axis. */
 };
 
 /**
