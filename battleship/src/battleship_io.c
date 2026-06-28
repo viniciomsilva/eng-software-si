@@ -173,7 +173,7 @@ Coord io_read_coord(void) {
 }
 
 void io_render(GameState* state) {
-    char (*board)[BOARD_SIZE] = state->control_board;
+    char (*board)[BOARD_SIZE] = state->draw_board;
     Projectile* arsenal = state->player.arsenal;
 
     draw_columns_letters();
