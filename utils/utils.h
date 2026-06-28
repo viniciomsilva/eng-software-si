@@ -50,7 +50,6 @@ void read_str(char* buffer, int buffer_size);
  * @param buffer_size Size of the buffer.
  * @param err Custom error message for non-numeric inputs.
  * @return long A valid long integer entered by the user.
- *
  */
 long read_long(int buffer_size, const char* err);
 
@@ -58,7 +57,6 @@ long read_long(int buffer_size, const char* err);
  * @brief Converts a string to uppercase.
  *
  * @param str Pointer to where the string will be stored.
- *
  */
 void transform_to_upper(char* str);
 
@@ -68,7 +66,6 @@ void transform_to_upper(char* str);
  * @param numbers Pointer to the integer array.
  * @param size Array size (number of elements).
  * @return int The sum of all elements.
- *
  */
 int sum(const int* numbers, int size);
 
