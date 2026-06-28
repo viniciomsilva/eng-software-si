@@ -18,6 +18,21 @@
 void clear(void);
 
 /**
+ * @brief Draws a random pseudo-random integer index cleanly below designated
+ * target bounds.
+ *
+ * @param limit Non-inclusive top bounds index cutoff limit.
+ * @return int Sourced random index spanning from 0 to (limit - 1).
+ */
+int draw_random(int limit);
+
+/**
+ * @brief Set the random seed based time object.
+ *
+ */
+void set_random_seed_based_time();
+
+/**
  * @brief Reads standard input while preventing buffer overflow.
  *
  * @param buffer Pointer to where the value will be stored.

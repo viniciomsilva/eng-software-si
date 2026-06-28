@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 /**
  * @def CLS_CMD
@@ -41,6 +42,14 @@ void clean_buffer(void) {
 
 void clear(void) {
     system(CLS_CMD);
+}
+
+int draw_random(int limit) {
+    return rand() % limit;
+}
+
+void set_random_seed_based_time() {
+    srand(time(NULL));
 }
 
 void read_str(char* buffer, int buffer_size) {

@@ -12,7 +12,6 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 
 #include "../../utils/utils.h"
 
@@ -129,17 +128,6 @@ bool is_filledout(char (*board)[BOARD_SIZE], Coord coord) {
 void decrement_ammunition(int* projectile_count, int* player_combat_load) {
     *projectile_count -= 1;
     *player_combat_load -= 1;
-}
-
-/**
- * @brief Draws a random pseudo-random integer index cleanly below designated
- * target bounds.
- *
- * @param limit Non-inclusive top bounds index cutoff limit.
- * @return int Sourced random index spanning from 0 to (limit - 1).
- */
-int draw_random(int limit) {
-    return rand() % limit;
 }
 
 /**
@@ -491,8 +479,6 @@ void init_boards(GameState* state) {
  * @param state Master engine status context tracked.
  */
 void init_ships(GameState* state) {
-    srand(time(NULL));
-
     Coord directions[DIRECTIONS_SIZE] = {
         { .x = 0, .y = 1 },
         { .x = 1, .y = 0 },
@@ -538,6 +524,7 @@ void finish_game(GameState* state) {
 
 void init_game_state(GameState* state, const char* player_name) {
     state->running = true;
+    set_random_seed_based_time();
     init_boards(state);
     init_ships(state);
     init_player_state(&state->player, player_name);
