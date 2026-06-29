@@ -45,6 +45,8 @@ void clear(void) {
 }
 
 int draw_random(int limit) {
+    if (limit == 0) return 0;
+
     return rand() % limit;
 }
 
